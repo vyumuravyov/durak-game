@@ -6,14 +6,26 @@
 <title>Дурак</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
+
+html,
+body{
+  width:100%;
+  height:100%;
+  margin:0;
+}
 
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#071811;
-  color:white;
   overflow:hidden;
+  font-family:Arial,sans-serif;
+  color:#fff;
+  background:#061811;
+}
+
+button{
+  font:inherit;
 }
 
 .game{
@@ -21,90 +33,128 @@ body{
   height:100vh;
   min-height:650px;
   position:relative;
+  overflow:hidden;
+
   background:
-    radial-gradient(circle at 50% 45%,#17603f 0,#0d422d 38%,#08271c 70%,#051b13 100%);
+    radial-gradient(circle at 50% 46%,#176342 0,#0d432e 40%,#08291d 72%,#051a13 100%);
 }
+
+.game::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+
+  background:
+    radial-gradient(circle at 50% 50%,transparent 48%,rgba(0,0,0,.16));
+}
+
+
+/* =========================
+   HEADER
+========================= */
 
 .header{
   position:absolute;
   top:20px;
   left:25px;
   right:25px;
+
   display:flex;
   justify-content:space-between;
   align-items:flex-start;
+
+  z-index:30;
 }
 
 .logo{
   font-size:27px;
   font-weight:900;
   letter-spacing:2px;
+
+  text-shadow:0 3px 12px rgba(0,0,0,.4);
 }
 
 .logo small{
   display:block;
+  margin-top:3px;
+
+  color:#e7c873;
+
   font-size:9px;
   letter-spacing:4px;
-  color:#e4c875;
-  margin-top:3px;
 }
 
 .status{
-  background:#071d15aa;
-  border:1px solid #ffffff15;
-  padding:12px 18px;
-  border-radius:30px;
+  min-width:180px;
+  padding:11px 17px;
+
+  border-radius:25px;
+
+  border:1px solid rgba(255,255,255,.09);
+
+  background:rgba(3,20,14,.62);
+
   font-size:13px;
+  text-align:center;
+
+  box-shadow:0 8px 22px rgba(0,0,0,.18);
 }
 
-.hand{
-  position:absolute;
-  left:50%;
-  transform:translateX(-50%);
-  display:flex;
-  justify-content:center;
-}
 
-.cpu{
-  top:75px;
-}
-
-.player{
-  bottom:25px;
-}
+/* =========================
+   CARDS
+========================= */
 
 .card{
-  width:82px;
-  height:116px;
-  background:#f6f2e9;
-  color:#171717;
-  border-radius:10px;
-  border:1px solid #c9c3b8;
-  box-shadow:0 8px 20px #0008;
-  position:relative;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  font-size:32px;
-  font-weight:bold;
-  margin-left:-22px;
-  user-select:none;
-}
+  width:84px;
+  height:118px;
 
-.card:first-child{
-  margin-left:0;
+  position:relative;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  flex:0 0 auto;
+
+  border-radius:11px;
+
+  border:1px solid #cac3b6;
+
+  background:
+    linear-gradient(
+      145deg,
+      #fffefa 0%,
+      #f0ebe2 100%
+    );
+
+  color:#171717;
+
+  font-size:32px;
+  font-weight:700;
+
+  box-shadow:
+    0 9px 22px rgba(0,0,0,.42);
+
+  user-select:none;
+
+  transform-origin:center bottom;
 }
 
 .card.red{
-  color:#c92332;
+  color:#c92634;
 }
 
 .corner{
   position:absolute;
+
   left:8px;
   top:7px;
+
   font-size:17px;
   line-height:16px;
+
   text-align:center;
 }
 
@@ -113,928 +163,3200 @@ body{
   font-size:16px;
 }
 
-.back{
+.corner.bottom{
+  left:auto;
+  top:auto;
+
+  right:8px;
+  bottom:7px;
+
+  transform:rotate(180deg);
+}
+
+.card.back{
+  border:5px solid #eee8dc;
+
   background:
     repeating-linear-gradient(
       45deg,
-      #173c67 0 5px,
-      #eee7db 5px 8px,
-      #922a34 8px 13px,
-      #eee7db 13px 16px
+      #173b67 0 5px,
+      #eee6d8 5px 8px,
+      #942b36 8px 13px,
+      #eee6d8 13px 16px
     );
-  border:5px solid #eee9df;
 }
 
-.player .playable{
+
+/* =========================
+   HANDS
+========================= */
+
+.hand{
+  position:absolute;
+
+  left:50%;
+
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+
+  transform:translateX(-50%);
+
+  z-index:20;
+}
+
+.cpu-hand{
+  top:68px;
+  align-items:flex-start;
+}
+
+.player-hand{
+  bottom:-12px;
+
+  min-height:160px;
+  padding-top:25px;
+}
+
+.hand .card{
+  margin-left:-31px;
+}
+
+.hand .card:first-child{
+  margin-left:0;
+}
+
+
+/* Веер игрока */
+
+.player-hand .card{
+  transform:
+    rotate(var(--rotation,0deg))
+    translateY(var(--drop,0px));
+
+  transition:
+    transform .18s ease,
+    box-shadow .18s ease,
+    opacity .18s ease,
+    filter .18s ease;
+}
+
+.player-hand .card.playable{
   cursor:pointer;
-  transition:.15s;
 }
 
-.player .playable:hover{
-  transform:translateY(-16px);
+.player-hand .card.playable:hover{
+  z-index:100;
+
+  transform:
+    rotate(var(--rotation,0deg))
+    translateY(calc(var(--drop,0px) - 18px))
+    scale(1.035);
+
+  box-shadow:
+    0 18px 30px rgba(0,0,0,.48);
 }
 
-.player .disabled{
+.player-hand .card.disabled{
   opacity:.48;
-  filter:brightness(.8);
+  filter:brightness(.78);
 }
+
+
+/* Первый козырь */
+
+.player-hand .card.first-trump{
+  margin-left:2px;
+}
+
+
+/* CPU веер */
+
+.cpu-hand .card{
+  transform:
+    rotate(var(--rotation,0deg))
+    translateY(var(--drop,0px));
+}
+
+
+/* =========================
+   TABLE
+========================= */
 
 .table{
   position:absolute;
+
   left:50%;
-  top:47%;
+  top:46%;
+
   transform:translate(-50%,-50%);
-  width:min(760px,70vw);
-  min-height:300px;
+
+  width:min(760px,68vw);
+  min-height:310px;
+
   display:flex;
-  align-items:center;
   justify-content:center;
+  align-items:center;
+  align-content:center;
+
   flex-wrap:wrap;
-  gap:15px;
+
+  gap:12px 18px;
+
+  z-index:10;
 }
 
 .pair{
-  width:115px;
-  height:150px;
+  width:120px;
+  height:154px;
+
   position:relative;
 }
 
 .pair .card{
   position:absolute;
-  margin:0;
+
   left:0;
-  top:0;
+  top:5px;
+
+  margin:0;
+
+  animation:
+    tableCardIn .2s ease both;
 }
 
-.pair .defense{
-  left:30px;
-  top:28px;
+.pair .card.defense{
+  left:31px;
+  top:29px;
+
   transform:rotate(9deg);
+
+  animation:
+    defenseCardIn .2s ease both;
 }
 
-.deck{
+@keyframes tableCardIn{
+  from{
+    opacity:0;
+    transform:scale(.9) translateY(10px);
+  }
+
+  to{
+    opacity:1;
+    transform:scale(1) translateY(0);
+  }
+}
+
+@keyframes defenseCardIn{
+  from{
+    opacity:0;
+    transform:rotate(9deg) scale(.9) translateY(-10px);
+  }
+
+  to{
+    opacity:1;
+    transform:rotate(9deg) scale(1);
+  }
+}
+
+
+/* =========================
+   DECK
+========================= */
+
+.deck-zone{
   position:absolute;
+
   left:6%;
-  top:47%;
+  top:46%;
+
   transform:translateY(-50%);
-  width:150px;
-  height:150px;
+
+  width:175px;
+  height:170px;
+
+  z-index:8;
 }
 
-.deck .back{
+.deck-card{
   position:absolute;
-  margin:0;
+
   left:0;
-  top:10px;
+  top:18px;
+
+  z-index:4;
 }
 
-.trump-card{
+.deck-card .card{
+  margin:0;
+}
+
+.deck-trump{
   position:absolute;
-  left:38px;
-  top:12px;
+
+  left:40px;
+  top:18px;
+
+  z-index:1;
+
   transform:rotate(90deg);
-  z-index:-1;
+}
+
+.deck-trump .card{
+  margin:0;
 }
 
 .deck-count{
   position:absolute;
-  top:133px;
+
   left:5px;
+  top:143px;
+
+  color:#c2cec8;
+
   font-size:11px;
-  color:#bbb;
+}
+
+.trump-label{
+  position:absolute;
+
+  left:108px;
+  top:43px;
+
+  color:#adbbb4;
+
+  font-size:9px;
+  letter-spacing:1.8px;
+
+  text-transform:uppercase;
 }
 
 .trump-symbol{
   position:absolute;
-  left:100px;
-  top:50px;
-  font-size:30px;
+
+  left:112px;
+  top:58px;
+
+  font-size:32px;
 }
+
+
+/* =========================
+   DISCARD
+========================= */
+
+.discard{
+  position:absolute;
+
+  right:6%;
+  bottom:25%;
+
+  width:105px;
+  height:135px;
+
+  z-index:6;
+}
+
+.discard-label{
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:-3px;
+
+  text-align:center;
+
+  color:#a8b7af;
+
+  font-size:9px;
+  letter-spacing:2px;
+
+  text-transform:uppercase;
+}
+
+.discard-card{
+  position:absolute;
+
+  width:70px;
+  height:98px;
+
+  left:17px;
+  top:10px;
+
+  border:4px solid #eae4d8;
+  border-radius:9px;
+
+  background:
+    repeating-linear-gradient(
+      45deg,
+      #173b67 0 5px,
+      #eee6d8 5px 8px,
+      #942b36 8px 13px,
+      #eee6d8 13px 16px
+    );
+
+  box-shadow:
+    0 8px 18px rgba(0,0,0,.3);
+}
+
+.discard-card:nth-child(1){
+  transform:rotate(-7deg);
+}
+
+.discard-card:nth-child(2){
+  transform:rotate(5deg);
+}
+
+.discard-card:nth-child(3){
+  transform:rotate(-1deg);
+}
+
+
+/* =========================
+   ACTION BUTTON
+========================= */
 
 .action{
   position:absolute;
+
   right:6%;
-  top:48%;
+  top:46%;
+
+  transform:translateY(-50%);
+
+  z-index:30;
 }
 
-button{
-  border:1px solid #ffffff25;
-  background:#e9e8e2;
-  color:#17251f;
-  border-radius:10px;
+.action button{
+  min-width:110px;
+
   padding:12px 20px;
-  font-weight:bold;
+
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:10px;
+
+  background:#eee9df;
+
+  color:#17241e;
+
+  font-weight:800;
+
   cursor:pointer;
+
+  box-shadow:0 7px 18px rgba(0,0,0,.25);
+
+  transition:
+    transform .12s ease,
+    filter .12s ease;
 }
 
-button:hover{
-  filter:brightness(1.08);
+.action button:hover{
+  transform:translateY(-2px);
+
+  filter:brightness(1.06);
 }
 
-button.danger{
-  background:#8d3038;
-  color:white;
+.action button.danger{
+  color:#fff;
+  background:#97323d;
 }
 
 .hidden{
-  display:none!important;
+  display:none !important;
 }
 
-.start{
+
+/* =========================
+   FLYING CARDS
+========================= */
+
+.flying-card{
+  position:fixed !important;
+
+  z-index:1000 !important;
+
+  margin:0 !important;
+
+  pointer-events:none;
+
+  transition:
+    left .35s cubic-bezier(.2,.75,.2,1),
+    top .35s cubic-bezier(.2,.75,.2,1),
+    transform .35s cubic-bezier(.2,.75,.2,1),
+    opacity .35s ease;
+}
+
+
+/* =========================
+   START SCREEN
+========================= */
+
+.start-screen{
   position:fixed;
+
   inset:0;
-  z-index:100;
+
   display:flex;
   align-items:center;
   justify-content:center;
+
+  z-index:200;
+
   background:
-    radial-gradient(circle at center,#123d2b,#061a12);
+    radial-gradient(circle at 50% 40%,#15452f,#061a12);
 }
 
-.menu{
-  width:380px;
-  padding:35px;
-  border-radius:22px;
-  background:#0c271c;
-  border:1px solid #ffffff18;
-  box-shadow:0 30px 80px #0008;
+.start-box{
+  width:390px;
+
+  padding:34px;
+
+  border-radius:24px;
+
+  background:
+    rgba(10,35,24,.96);
+
+  border:1px solid rgba(255,255,255,.1);
+
+  box-shadow:
+    0 30px 80px rgba(0,0,0,.48);
 }
 
-.menu h1{
-  font-size:45px;
+.start-box h1{
   margin:0;
+
+  font-size:46px;
+  letter-spacing:3px;
 }
 
-.menu p{
-  color:#aebcb5;
-  margin:7px 0 28px;
+.start-box p{
+  margin:8px 0 28px;
+
+  color:#aab9b1;
+
+  line-height:1.45;
 }
 
-.menu button{
+.start-box button{
   width:100%;
-  padding:15px;
-  background:#e8cb78;
+
+  padding:14px;
+
+  border:0;
+  border-radius:11px;
+
+  background:#e8c975;
+
+  color:#1b231e;
+
+  font-weight:900;
+
+  cursor:pointer;
 }
 
-@media(max-width:800px){
+
+/* =========================
+   END SCREEN
+========================= */
+
+.result-overlay{
+  position:fixed;
+
+  inset:0;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  z-index:300;
+
+  background:rgba(2,12,8,.74);
+
+  backdrop-filter:blur(7px);
+}
+
+.result-box{
+  width:390px;
+
+  padding:34px;
+
+  text-align:center;
+
+  border-radius:25px;
+
+  color:#17201b;
+
+  background:
+    linear-gradient(145deg,#fffdf6,#e9e2d4);
+
+  box-shadow:
+    0 30px 90px rgba(0,0,0,.55);
+
+  animation:
+    resultIn .22s ease both;
+}
+
+@keyframes resultIn{
+  from{
+    opacity:0;
+    transform:scale(.92);
+  }
+
+  to{
+    opacity:1;
+    transform:scale(1);
+  }
+}
+
+.result-icon{
+  font-size:46px;
+  margin-bottom:8px;
+}
+
+.result-title{
+  margin:0;
+
+  font-size:31px;
+}
+
+.result-text{
+  margin:8px 0 22px;
+
+  color:#655f56;
+}
+
+.result-box button{
+  padding:13px 25px;
+
+  border:0;
+  border-radius:11px;
+
+  color:#fff;
+  background:#174b35;
+
+  font-weight:900;
+
+  cursor:pointer;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:850px){
+
   .card{
-    width:65px;
+    width:66px;
     height:94px;
+
     font-size:25px;
-    margin-left:-23px;
   }
 
   .corner{
     font-size:14px;
+    line-height:13px;
+  }
+
+  .corner span{
+    font-size:13px;
+  }
+
+  .hand .card{
+    margin-left:-27px;
+  }
+
+  .player-hand .card.first-trump{
+    margin-left:-1px;
   }
 
   .table{
     width:58vw;
+
+    gap:8px;
   }
 
-  .deck{
+  .pair{
+    width:90px;
+    height:120px;
+  }
+
+  .pair .card.defense{
+    left:23px;
+    top:22px;
+  }
+
+  .deck-zone{
     left:2%;
+
+    transform:
+      translateY(-50%)
+      scale(.82);
+
+    transform-origin:left center;
+  }
+
+  .discard{
+    transform:scale(.8);
+    transform-origin:right bottom;
   }
 
   .action{
     right:2%;
   }
+
 }
 </style>
 </head>
+
 
 <body>
 
 <div class="game">
 
   <div class="header">
+
     <div class="logo">
       ДУРАК
       <small>ПОДКИДНОЙ</small>
     </div>
 
-    <div class="status" id="status">
+    <div
+      class="status"
+      id="status"
+    >
       Начинаем...
     </div>
+
   </div>
 
-  <div class="hand cpu" id="cpuHand"></div>
 
-  <div class="deck">
-    <div id="trumpCard"></div>
-    <div id="deckVisual"></div>
-    <div class="deck-count" id="deckCount"></div>
-    <div class="trump-symbol" id="trumpSymbol"></div>
+  <div
+    class="hand cpu-hand"
+    id="cpuHand"
+  ></div>
+
+
+  <div class="deck-zone">
+
+    <div
+      class="deck-trump"
+      id="deckTrump"
+    ></div>
+
+    <div
+      class="deck-card"
+      id="deckCard"
+    ></div>
+
+    <div
+      class="deck-count"
+      id="deckCount"
+    ></div>
+
+    <div class="trump-label">
+      Козырь
+    </div>
+
+    <div
+      class="trump-symbol"
+      id="trumpSymbol"
+    ></div>
+
   </div>
 
-  <div class="table" id="table"></div>
+
+  <div
+    class="table"
+    id="table"
+  ></div>
+
+
+  <div
+    class="discard"
+    id="discard"
+  >
+
+    <div class="discard-label">
+      Бито
+    </div>
+
+  </div>
+
 
   <div class="action">
-    <button id="actionButton" class="hidden"></button>
+
+    <button
+      id="actionButton"
+      class="hidden"
+    ></button>
+
   </div>
 
-  <div class="hand player" id="playerHand"></div>
+
+  <div
+    class="hand player-hand"
+    id="playerHand"
+  ></div>
 
 </div>
 
-<div class="start" id="startScreen">
-  <div class="menu">
+
+<div
+  class="start-screen"
+  id="startScreen"
+>
+
+  <div class="start-box">
+
     <h1>ДУРАК</h1>
-    <p>Классический подкидной. 36 карт.</p>
-    <button id="startButton">Начать игру</button>
+
+    <p>
+      Классический подкидной Дурак.
+      Колода 36 карт.
+    </p>
+
+    <button id="startButton">
+      Начать игру
+    </button>
+
   </div>
+
 </div>
+
+
+<div
+  class="result-overlay hidden"
+  id="resultOverlay"
+>
+
+  <div class="result-box">
+
+    <div
+      class="result-icon"
+      id="resultIcon"
+    ></div>
+
+    <h2
+      class="result-title"
+      id="resultTitle"
+    ></h2>
+
+    <div
+      class="result-text"
+      id="resultText"
+    ></div>
+
+    <button id="againButton">
+      Играть ещё
+    </button>
+
+  </div>
+
+</div>
+
 
 <script>
-const suits=["♠","♥","♦","♣"];
-const ranks=["6","7","8","9","10","J","Q","K","A"];
+
+/* =========================
+   CONSTANTS
+========================= */
+
+const suits=[
+  "♠",
+  "♥",
+  "♦",
+  "♣"
+];
+
+const suitOrder=[
+  "♣",
+  "♦",
+  "♥",
+  "♠"
+];
+
+const ranks=[
+  "6",
+  "7",
+  "8",
+  "9",
+  "10",
+  "J",
+  "Q",
+  "K",
+  "A"
+];
+
+
+/* =========================
+   STATE
+========================= */
 
 let deck=[];
+
 let player=[];
+
 let cpu=[];
+
 let table=[];
+
+let discardCount=0;
 
 let trump=null;
 
+let bottomTrump=null;
+
 let attacker="player";
+
 let defender="cpu";
 
 let defenderTaking=false;
+
 let defenderStartCards=6;
+
 let gameOver=false;
 
-const $=id=>document.getElementById(id);
+
+/* =========================
+   HELPERS
+========================= */
+
+const $=
+  id=>
+    document.getElementById(id);
+
 
 function isRed(suit){
-  return suit==="♥" || suit==="♦";
+
+  return (
+    suit==="♥"
+    ||
+    suit==="♦"
+  );
+
 }
+
 
 function value(card){
-  return ranks.indexOf(card.rank);
+
+  return ranks.indexOf(
+    card.rank
+  );
+
 }
+
 
 function createDeck(){
-  let result=[];
+
+  const result=[];
+
   let id=0;
 
-  for(const suit of suits){
-    for(const rank of ranks){
+
+  for(
+    const suit
+    of suits
+  ){
+
+    for(
+      const rank
+      of ranks
+    ){
+
       result.push({
+
         suit,
+
         rank,
-        id:"card_"+id++
+
+        id:
+          "card_"+id++
+
       });
+
     }
+
   }
+
 
   return result;
+
 }
+
 
 function shuffle(array){
-  for(let i=array.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [array[i],array[j]]=[array[j],array[i]];
+
+  for(
+    let i=array.length-1;
+    i>0;
+    i--
+  ){
+
+    const j=
+      Math.floor(
+        Math.random()*
+        (i+1)
+      );
+
+
+    [
+      array[i],
+      array[j]
+    ]=
+    [
+      array[j],
+      array[i]
+    ];
+
   }
+
 
   return array;
+
 }
 
-function cardHTML(card,back=false,extra=""){
-  if(back){
-    return `<div class="card back ${extra}"></div>`;
+
+function removeCard(
+  hand,
+  id
+){
+
+  const index=
+    hand.findIndex(
+      card=>
+        card.id===id
+    );
+
+
+  if(
+    index===-1
+  ){
+
+    return null;
+
   }
 
+
+  return hand.splice(
+    index,
+    1
+  )[0];
+
+}
+
+
+/* =========================
+   CARD HTML
+========================= */
+
+function cardHTML(
+  card,
+  back=false,
+  extra="",
+  style=""
+){
+
+  if(back){
+
+    return `
+
+      <div
+        class="
+          card
+          back
+          ${extra}
+        "
+        style="${style}"
+      ></div>
+
+    `;
+
+  }
+
+
   return `
+
     <div
-      class="card ${isRed(card.suit)?"red":""} ${extra}"
+      class="
+        card
+        ${isRed(card.suit)?"red":""}
+        ${extra}
+      "
+
       data-id="${card.id}"
+
+      style="${style}"
     >
+
       <div class="corner">
+
         ${card.rank}
-        <span>${card.suit}</span>
+
+        <span>
+          ${card.suit}
+        </span>
+
       </div>
 
       ${card.suit}
+
+      <div class="corner bottom">
+
+        ${card.rank}
+
+        <span>
+          ${card.suit}
+        </span>
+
+      </div>
+
     </div>
+
   `;
+
 }
 
-function removeCard(hand,id){
-  const index=hand.findIndex(card=>card.id===id);
 
-  if(index===-1) return null;
+/* =========================
+   SORTING
+========================= */
 
-  return hand.splice(index,1)[0];
+function sortedPlayerHand(){
+
+  return [
+    ...player
+  ].sort(
+    (a,b)=>{
+
+      const aTrump=
+        a.suit===trump;
+
+      const bTrump=
+        b.suit===trump;
+
+
+      /*
+        Козыри всегда справа
+      */
+
+      if(
+        aTrump!==bTrump
+      ){
+
+        return (
+          aTrump
+            ?1
+            :-1
+        );
+
+      }
+
+
+      /*
+        Обычные карты
+        сортируем по мастям
+      */
+
+      if(
+        !aTrump
+        &&
+        a.suit!==b.suit
+      ){
+
+        return (
+          suitOrder.indexOf(
+            a.suit
+          )
+          -
+          suitOrder.indexOf(
+            b.suit
+          )
+        );
+
+      }
+
+
+      /*
+        Внутри группы
+        от младшей к старшей
+      */
+
+      return (
+        value(a)
+        -
+        value(b)
+      );
+
+    }
+  );
+
 }
 
-function beats(defense,attack){
-  if(
-    defense.suit===attack.suit &&
-    value(defense)>value(attack)
-  ){
-    return true;
-  }
+
+/* =========================
+   RULES
+========================= */
+
+function beats(
+  defenseCard,
+  attackCard
+){
+
+  /*
+    Та же масть
+  */
 
   if(
-    defense.suit===trump &&
-    attack.suit!==trump
+    defenseCard.suit===
+      attackCard.suit
+    &&
+    value(defenseCard)>
+      value(attackCard)
   ){
+
     return true;
+
   }
+
+
+  /*
+    Козырь
+  */
+
+  if(
+    defenseCard.suit===
+      trump
+    &&
+    attackCard.suit!==
+      trump
+  ){
+
+    return true;
+
+  }
+
 
   return false;
+
 }
+
 
 function tableRanks(){
+
   const result=[];
 
-  for(const pair of table){
-    result.push(pair.attack.rank);
 
-    if(pair.defense){
-      result.push(pair.defense.rank);
-    }
-  }
-
-  return result;
-}
-
-function maxAttacks(){
-  return Math.min(6,defenderStartCards);
-}
-
-function canAttack(card){
-  if(table.length>=maxAttacks()){
-    return false;
-  }
-
-  if(table.length===0){
-    return true;
-  }
-
-  return tableRanks().includes(card.rank);
-}
-
-function canPlayerPlay(card){
-  if(gameOver) return false;
-
-  if(attacker==="player"){
-    return canAttack(card);
-  }
-
-  if(
-    defender==="player" &&
-    !defenderTaking
+  for(
+    const pair
+    of table
   ){
-    const pair=table.find(pair=>!pair.defense);
 
-    return pair
-      ? beats(card,pair.attack)
-      : false;
-  }
-
-  return false;
-}
-
-function render(){
-  $("cpuHand").innerHTML=
-    cpu.map(()=>cardHTML(null,true)).join("");
-
-  $("playerHand").innerHTML=
-    player.map(card=>{
-      return cardHTML(
-        card,
-        false,
-        canPlayerPlay(card)
-          ?"playable"
-          :"disabled"
-      );
-    }).join("");
-
-  $("table").innerHTML=
-    table.map(pair=>{
-      return `
-        <div class="pair">
-          ${cardHTML(pair.attack)}
-
-          ${
-            pair.defense
-              ?cardHTML(pair.defense,false,"defense")
-              :""
-          }
-        </div>
-      `;
-    }).join("");
-
-  $("deckVisual").innerHTML=
-    deck.length
-      ?cardHTML(null,true)
-      :"";
-
-  $("deckCount").textContent=
-    deck.length
-      ?`В колоде: ${deck.length}`
-      :"";
-
-  $("trumpSymbol").textContent=trump || "";
-
-  $("trumpSymbol").style.color=
-    isRed(trump)
-      ?"#e34a58"
-      :"white";
-
-  renderAction();
-  renderStatus();
-}
-
-function renderStatus(){
-  let text="";
-
-  if(gameOver){
-    text="Игра окончена";
-  }
-  else if(defenderTaking){
-    text=
-      defender==="player"
-        ?"Ты забираешь карты"
-        :"Компьютер забирает";
-  }
-  else if(attacker==="player"){
-    text=
-      table.length
-        ?"Можно подкинуть"
-        :"Твой ход";
-  }
-  else{
-    text=
-      table.some(pair=>!pair.defense)
-        ?"Отбейся"
-        :"Ход компьютера";
-  }
-
-  $("status").textContent=
-    text+" · Козырь "+trump;
-}
-
-function renderAction(){
-  const button=$("actionButton");
-
-  button.className="hidden";
-  button.onclick=null;
-
-  if(gameOver) return;
-
-  if(
-    defender==="player" &&
-    !defenderTaking &&
-    table.some(pair=>!pair.defense)
-  ){
-    button.textContent="Забрать";
-    button.className="danger";
-    button.onclick=playerTake;
-    return;
-  }
-
-  if(
-    attacker==="player" &&
-    defenderTaking
-  ){
-    button.textContent="Закончить";
-    button.className="";
-    button.onclick=finishTake;
-    return;
-  }
-
-  if(
-    attacker==="player" &&
-    table.length &&
-    table.every(pair=>pair.defense)
-  ){
-    button.textContent="Бито";
-    button.className="";
-    button.onclick=successfulDefense;
-  }
-}
-
-function drawToSix(hand){
-  while(
-    hand.length<6 &&
-    deck.length
-  ){
-    hand.push(deck.shift());
-  }
-}
-
-function refill(callback){
-  const first=
-    attacker==="player"
-      ?player
-      :cpu;
-
-  const second=
-    attacker==="player"
-      ?cpu
-      :player;
-
-  drawToSix(first);
-  drawToSix(second);
-
-  render();
-
-  setTimeout(()=>{
-    checkGameEnd();
-
-    if(callback){
-      callback();
-    }
-  },150);
-}
-
-function lowestTrump(hand){
-  return hand
-    .filter(card=>card.suit===trump)
-    .sort((a,b)=>value(a)-value(b))[0];
-}
-
-function startGame(){
-  deck=shuffle(createDeck());
-
-  const trumpCard=deck[deck.length-1];
-  trump=trumpCard.suit;
-
-  player=[];
-  cpu=[];
-  table=[];
-
-  defenderTaking=false;
-  gameOver=false;
-
-  for(let i=0;i<6;i++){
-    player.push(deck.shift());
-    cpu.push(deck.shift());
-  }
-
-  const playerTrump=lowestTrump(player);
-  const cpuTrump=lowestTrump(cpu);
-
-  if(
-    playerTrump &&
-    cpuTrump
-  ){
-    attacker=
-      value(playerTrump)<=value(cpuTrump)
-        ?"player"
-        :"cpu";
-  }
-  else if(playerTrump){
-    attacker="player";
-  }
-  else if(cpuTrump){
-    attacker="cpu";
-  }
-  else{
-    attacker=
-      Math.random()<0.5
-        ?"player"
-        :"cpu";
-  }
-
-  defender=
-    attacker==="player"
-      ?"cpu"
-      :"player";
-
-  defenderStartCards=
-    defender==="player"
-      ?player.length
-      :cpu.length;
-
-  $("startScreen").classList.add("hidden");
-
-  render();
-
-  if(attacker==="cpu"){
-    setTimeout(cpuAttack,500);
-  }
-}
-
-function playerCardClick(id){
-  const card=
-    player.find(card=>card.id===id);
-
-  if(
-    !card ||
-    !canPlayerPlay(card)
-  ){
-    return;
-  }
-
-  if(attacker==="player"){
-    table.push({
-      attack:removeCard(player,id),
-      defense:null
-    });
-
-    render();
-
-    if(!defenderTaking){
-      setTimeout(cpuDefend,400);
-    }
-
-    return;
-  }
-
-  if(defender==="player"){
-    const pair=
-      table.find(pair=>!pair.defense);
-
-    if(
-      !pair ||
-      !beats(card,pair.attack)
-    ){
-      return;
-    }
-
-    pair.defense=
-      removeCard(player,id);
-
-    render();
-
-    setTimeout(cpuContinueAttack,400);
-  }
-}
-
-function cheapest(cards){
-  return [...cards].sort((a,b)=>{
-    const aTrump=a.suit===trump;
-    const bTrump=b.suit===trump;
-
-    if(aTrump!==bTrump){
-      return aTrump?1:-1;
-    }
-
-    return value(a)-value(b);
-  })[0];
-}
-
-function cpuDefend(){
-  if(
-    defender!=="cpu" ||
-    defenderTaking
-  ){
-    return;
-  }
-
-  const pair=
-    table.find(pair=>!pair.defense);
-
-  if(!pair) return;
-
-  const possible=
-    cpu.filter(card=>
-      beats(card,pair.attack)
+    result.push(
+      pair.attack.rank
     );
 
-  if(!possible.length){
-    defenderTaking=true;
-    render();
-    return;
+
+    if(
+      pair.defense
+    ){
+
+      result.push(
+        pair.defense.rank
+      );
+
+    }
+
   }
 
-  const defense=
-    cheapest(possible);
 
-  pair.defense=
-    removeCard(cpu,defense.id);
+  return result;
 
-  render();
 }
 
-function cpuAttack(){
+
+function maxAttacks(){
+
+  return Math.min(
+    6,
+    defenderStartCards
+  );
+
+}
+
+
+function canAttack(card){
+
   if(
-    attacker!=="cpu" ||
-    gameOver
+    table.length>=
+      maxAttacks()
   ){
-    return;
+
+    return false;
+
   }
 
-  const possible=
-    cpu.filter(canAttack);
 
-  if(!possible.length){
-    if(table.length){
-      successfulDefense();
+  if(
+    table.length===0
+  ){
+
+    return true;
+
+  }
+
+
+  return (
+    tableRanks()
+      .includes(
+        card.rank
+      )
+  );
+
+}
+
+
+function canPlayerPlay(card){
+
+  if(gameOver){
+
+    return false;
+
+  }
+
+
+  /*
+    Игрок атакует
+  */
+
+  if(
+    attacker==="player"
+  ){
+
+    return canAttack(
+      card
+    );
+
+  }
+
+
+  /*
+    Игрок защищается
+  */
+
+  if(
+    defender==="player"
+    &&
+    !defenderTaking
+  ){
+
+    const pair=
+      table.find(
+        item=>
+          !item.defense
+      );
+
+
+    if(!pair){
+
+      return false;
+
+    }
+
+
+    return beats(
+      card,
+      pair.attack
+    );
+
+  }
+
+
+  return false;
+
+}
+
+
+/* =========================
+   FAN
+========================= */
+
+function fanStyle(
+  index,
+  total,
+  inverted=false
+){
+
+  if(
+    total<=1
+  ){
+
+    return `
+      --rotation:0deg;
+      --drop:0px;
+    `;
+
+  }
+
+
+  const middle=
+    (total-1)/2;
+
+
+  const relative=
+    index-middle;
+
+
+  const rotation=
+    relative*3.2*
+    (
+      inverted
+        ?-1
+        :1
+    );
+
+
+  const distance=
+    Math.abs(
+      relative
+    );
+
+
+  const drop=
+    distance*2.3;
+
+
+  return `
+    --rotation:${rotation}deg;
+    --drop:${drop}px;
+  `;
+
+}
+
+
+/* =========================
+   RENDER
+========================= */
+
+function render(){
+
+  renderCPU();
+
+  renderPlayer();
+
+  renderTable();
+
+  renderDeck();
+
+  renderDiscard();
+
+  renderAction();
+
+  renderStatus();
+
+}
+
+
+function renderCPU(){
+
+  const total=
+    cpu.length;
+
+
+  $("cpuHand")
+    .innerHTML=
+
+    cpu
+      .map(
+        (
+          card,
+          index
+        )=>
+
+          cardHTML(
+            null,
+            true,
+            "",
+            fanStyle(
+              index,
+              total,
+              true
+            )
+          )
+      )
+      .join("");
+
+}
+
+
+function renderPlayer(){
+
+  const hand=
+    sortedPlayerHand();
+
+
+  const total=
+    hand.length;
+
+
+  const firstTrump=
+    hand.findIndex(
+      card=>
+        card.suit===trump
+    );
+
+
+  $("playerHand")
+    .innerHTML=
+
+    hand
+      .map(
+        (
+          card,
+          index
+        )=>{
+
+          const classes=[];
+
+
+          if(
+            canPlayerPlay(
+              card
+            )
+          ){
+
+            classes.push(
+              "playable"
+            );
+
+          }
+
+          else{
+
+            classes.push(
+              "disabled"
+            );
+
+          }
+
+
+          if(
+            index===
+              firstTrump
+            &&
+            firstTrump>0
+          ){
+
+            classes.push(
+              "first-trump"
+            );
+
+          }
+
+
+          return cardHTML(
+            card,
+            false,
+            classes.join(" "),
+            fanStyle(
+              index,
+              total
+            )
+          );
+
+        }
+      )
+      .join("");
+
+}
+
+
+function renderTable(){
+
+  $("table")
+    .innerHTML=
+
+    table
+      .map(
+        pair=>`
+
+          <div class="pair">
+
+            ${
+              cardHTML(
+                pair.attack
+              )
+            }
+
+            ${
+              pair.defense
+                ?
+                  cardHTML(
+                    pair.defense,
+                    false,
+                    "defense"
+                  )
+                :
+                  ""
+            }
+
+          </div>
+
+        `
+      )
+      .join("");
+
+}
+
+
+function renderDeck(){
+
+  $("deckCard")
+    .innerHTML=
+
+    deck.length
+
+      ?
+
+        cardHTML(
+          null,
+          true
+        )
+
+      :
+
+        "";
+
+
+  /*
+    Нижний козырь
+    остаётся видимым,
+    пока он физически
+    ещё находится в колоде
+  */
+
+  if(
+    deck.includes(
+      bottomTrump
+    )
+  ){
+
+    $("deckTrump")
+      .innerHTML=
+
+        cardHTML(
+          bottomTrump
+        );
+
+  }
+
+  else{
+
+    $("deckTrump")
+      .innerHTML="";
+
+  }
+
+
+  $("deckCount")
+    .textContent=
+
+    deck.length
+
+      ?
+
+        `В колоде: ${deck.length}`
+
+      :
+
+        "";
+
+
+  $("trumpSymbol")
+    .textContent=
+      trump || "";
+
+
+  $("trumpSymbol")
+    .style.color=
+
+    isRed(trump)
+
+      ?
+
+        "#e44c59"
+
+      :
+
+        "#fff";
+
+}
+
+
+function renderDiscard(){
+
+  const area=
+    $("discard");
+
+
+  const count=
+    Math.min(
+      3,
+      Math.ceil(
+        discardCount/2
+      )
+    );
+
+
+  let html="";
+
+
+  for(
+    let i=0;
+    i<count;
+    i++
+  ){
+
+    html+=
+      `<div class="discard-card"></div>`;
+
+  }
+
+
+  html+=`
+    <div class="discard-label">
+      ${
+        discardCount
+          ?
+            `Бито · ${discardCount}`
+          :
+            "Бито"
+      }
+    </div>
+  `;
+
+
+  area.innerHTML=
+    html;
+
+}
+
+
+function renderStatus(){
+
+  let text="";
+
+
+  if(gameOver){
+
+    text=
+      "Игра окончена";
+
+  }
+
+  else if(
+    defenderTaking
+  ){
+
+    text=
+
+      defender==="player"
+
+        ?
+
+          "Ты забираешь"
+
+        :
+
+          "Компьютер забирает";
+
+  }
+
+  else if(
+    attacker==="player"
+  ){
+
+    text=
+
+      table.length
+
+        ?
+
+          "Можно подкинуть"
+
+        :
+
+          "Твой ход";
+
+  }
+
+  else{
+
+    text=
+
+      table.some(
+        pair=>
+          !pair.defense
+      )
+
+        ?
+
+          "Отбейся"
+
+        :
+
+          "Ход компьютера";
+
+  }
+
+
+  $("status")
+    .textContent=
+
+      `${text} · ${trump}`;
+
+}
+
+
+function renderAction(){
+
+  const button=
+    $("actionButton");
+
+
+  button.className=
+    "hidden";
+
+  button.onclick=
+    null;
+
+
+  if(gameOver){
+
+    return;
+
+  }
+
+
+  /*
+    Игрок защищается
+  */
+
+  if(
+    defender==="player"
+    &&
+    !defenderTaking
+    &&
+    table.some(
+      pair=>
+        !pair.defense
+    )
+  ){
+
+    button.textContent=
+      "Забрать";
+
+    button.className=
+      "danger";
+
+    button.onclick=
+      playerTake;
+
+    return;
+
+  }
+
+
+  /*
+    CPU забирает
+  */
+
+  if(
+    attacker==="player"
+    &&
+    defenderTaking
+  ){
+
+    button.textContent=
+      "Закончить";
+
+    button.className="";
+
+    button.onclick=
+      finishTake;
+
+    return;
+
+  }
+
+
+  /*
+    CPU отбился
+  */
+
+  if(
+    attacker==="player"
+    &&
+    table.length
+    &&
+    table.every(
+      pair=>
+        pair.defense
+    )
+  ){
+
+    button.textContent=
+      "Бито";
+
+    button.className="";
+
+    button.onclick=
+      successfulDefense;
+
+  }
+
+}
+
+
+/* =========================
+   ANIMATION
+========================= */
+
+function flyCard(
+  element,
+  targetElement,
+  callback=null
+){
+
+  if(
+    !element
+    ||
+    !targetElement
+  ){
+
+    if(callback){
+
+      callback();
+
     }
 
     return;
+
   }
 
-  const attack=
-    cheapest(possible);
 
-  table.push({
-    attack:removeCard(cpu,attack.id),
-    defense:null
-  });
+  const from=
+    element.getBoundingClientRect();
 
-  render();
+
+  const to=
+    targetElement.getBoundingClientRect();
+
+
+  const clone=
+    element.cloneNode(
+      true
+    );
+
+
+  clone.classList.add(
+    "flying-card"
+  );
+
+
+  clone.style.left=
+    from.left+"px";
+
+  clone.style.top=
+    from.top+"px";
+
+  clone.style.width=
+    from.width+"px";
+
+  clone.style.height=
+    from.height+"px";
+
+  clone.style.transform=
+    "none";
+
+
+  document.body
+    .appendChild(
+      clone
+    );
+
+
+  requestAnimationFrame(
+    ()=>{
+
+      clone.style.left=
+        (
+          to.left
+          +
+          to.width/2
+          -
+          from.width/2
+        )
+        +"px";
+
+
+      clone.style.top=
+        (
+          to.top
+          +
+          to.height/2
+          -
+          from.height/2
+        )
+        +"px";
+
+
+      clone.style.transform=
+        "scale(.94) rotate(5deg)";
+
+    }
+  );
+
+
+  setTimeout(
+    ()=>{
+
+      clone.remove();
+
+
+      if(callback){
+
+        callback();
+
+      }
+
+    },
+    370
+  );
+
 }
 
-function cpuContinueAttack(){
+
+function flyTableCardsTo(
+  target,
+  callback
+){
+
+  const cards=
+    [
+      ...
+      document.querySelectorAll(
+        "#table .card"
+      )
+    ];
+
+
   if(
-    attacker!=="cpu" ||
-    gameOver
+    !cards.length
   ){
+
+    callback();
+
     return;
+
   }
 
-  if(defenderTaking){
-    const possible=
-      cpu.filter(canAttack);
 
-    if(possible.length){
+  let finished=0;
+
+
+  cards.forEach(
+    (
+      card,
+      index
+    )=>{
+
+      setTimeout(
+        ()=>{
+
+          flyCard(
+            card,
+            target,
+            ()=>{
+
+              finished++;
+
+
+              if(
+                finished===
+                  cards.length
+              ){
+
+                callback();
+
+              }
+
+            }
+          );
+
+        },
+        index*40
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================
+   DRAW
+========================= */
+
+function drawToSix(hand){
+
+  while(
+    hand.length<6
+    &&
+    deck.length
+  ){
+
+    /*
+      deck.shift()
+      означает:
+      нижний козырь,
+      находящийся в конце,
+      реально будет взят
+      последним
+    */
+
+    hand.push(
+      deck.shift()
+    );
+
+  }
+
+}
+
+
+function refill(callback){
+
+  const first=
+
+    attacker==="player"
+
+      ?
+
+        player
+
+      :
+
+        cpu;
+
+
+  const second=
+
+    attacker==="player"
+
+      ?
+
+        cpu
+
+      :
+
+        player;
+
+
+  drawToSix(
+    first
+  );
+
+
+  drawToSix(
+    second
+  );
+
+
+  render();
+
+
+  setTimeout(
+    ()=>{
+
+      checkGameEnd();
+
+
+      if(callback){
+
+        callback();
+
+      }
+
+    },
+    180
+  );
+
+}
+
+
+/* =========================
+   FIRST MOVE
+========================= */
+
+function lowestTrump(hand){
+
+  return hand
+
+    .filter(
+      card=>
+        card.suit===
+          trump
+    )
+
+    .sort(
+      (a,b)=>
+        value(a)
+        -
+        value(b)
+    )[0];
+
+}
+
+
+/* =========================
+   START
+========================= */
+
+function startGame(){
+
+  deck=
+    shuffle(
+      createDeck()
+    );
+
+
+  /*
+    Последняя карта
+    становится козырем
+  */
+
+  bottomTrump=
+    deck[
+      deck.length-1
+    ];
+
+
+  trump=
+    bottomTrump.suit;
+
+
+  player=[];
+
+  cpu=[];
+
+  table=[];
+
+  discardCount=0;
+
+
+  defenderTaking=
+    false;
+
+
+  gameOver=
+    false;
+
+
+  /*
+    Раздаём по одной
+    по кругу
+  */
+
+  for(
+    let i=0;
+    i<6;
+    i++
+  ){
+
+    player.push(
+      deck.shift()
+    );
+
+
+    cpu.push(
+      deck.shift()
+    );
+
+  }
+
+
+  const playerTrump=
+    lowestTrump(
+      player
+    );
+
+
+  const cpuTrump=
+    lowestTrump(
+      cpu
+    );
+
+
+  if(
+    playerTrump
+    &&
+    cpuTrump
+  ){
+
+    attacker=
+
+      value(playerTrump)
+      <=
+      value(cpuTrump)
+
+        ?
+
+          "player"
+
+        :
+
+          "cpu";
+
+  }
+
+  else if(
+    playerTrump
+  ){
+
+    attacker=
+      "player";
+
+  }
+
+  else if(
+    cpuTrump
+  ){
+
+    attacker=
+      "cpu";
+
+  }
+
+  else{
+
+    attacker=
+
+      Math.random()<.5
+
+        ?
+
+          "player"
+
+        :
+
+          "cpu";
+
+  }
+
+
+  defender=
+
+    attacker==="player"
+
+      ?
+
+        "cpu"
+
+      :
+
+        "player";
+
+
+  defenderStartCards=
+
+    defender==="player"
+
+      ?
+
+        player.length
+
+      :
+
+        cpu.length;
+
+
+  $("startScreen")
+    .classList
+    .add(
+      "hidden"
+    );
+
+
+  $("resultOverlay")
+    .classList
+    .add(
+      "hidden"
+    );
+
+
+  render();
+
+
+  if(
+    attacker==="cpu"
+  ){
+
+    setTimeout(
+      cpuAttack,
+      500
+    );
+
+  }
+
+}
+
+
+/* =========================
+   PLAYER
+========================= */
+
+function playerCardClick(
+  id,
+  element
+){
+
+  const card=
+    player.find(
+      card=>
+        card.id===id
+    );
+
+
+  if(
+    !card
+    ||
+    !canPlayerPlay(
+      card
+    )
+  ){
+
+    return;
+
+  }
+
+
+  const tableElement=
+    $("table");
+
+
+  flyCard(
+    element,
+    tableElement
+  );
+
+
+  /*
+    Player attacks
+  */
+
+  if(
+    attacker==="player"
+  ){
+
+    table.push({
+
+      attack:
+        removeCard(
+          player,
+          id
+        ),
+
+      defense:null
+
+    });
+
+
+    render();
+
+
+    if(
+      !defenderTaking
+    ){
+
+      setTimeout(
+        cpuDefend,
+        420
+      );
+
+    }
+
+
+    return;
+
+  }
+
+
+  /*
+    Player defends
+  */
+
+  const pair=
+    table.find(
+      pair=>
+        !pair.defense
+    );
+
+
+  if(
+    !pair
+    ||
+    !beats(
+      card,
+      pair.attack
+    )
+  ){
+
+    return;
+
+  }
+
+
+  pair.defense=
+    removeCard(
+      player,
+      id
+    );
+
+
+  render();
+
+
+  setTimeout(
+    cpuContinueAttack,
+    420
+  );
+
+}
+
+
+/* =========================
+   CPU HELPERS
+========================= */
+
+function cheapest(cards){
+
+  return [
+    ...cards
+  ].sort(
+    (a,b)=>{
+
+      const aTrump=
+        a.suit===trump;
+
+      const bTrump=
+        b.suit===trump;
+
+
+      if(
+        aTrump!==bTrump
+      ){
+
+        return (
+          aTrump
+            ?1
+            :-1
+        );
+
+      }
+
+
+      return (
+        value(a)
+        -
+        value(b)
+      );
+
+    }
+  )[0];
+
+}
+
+
+/* =========================
+   CPU DEFENSE
+========================= */
+
+function cpuDefend(){
+
+  if(
+    defender!=="cpu"
+    ||
+    defenderTaking
+  ){
+
+    return;
+
+  }
+
+
+  const pair=
+    table.find(
+      pair=>
+        !pair.defense
+    );
+
+
+  if(!pair){
+
+    return;
+
+  }
+
+
+  const possible=
+    cpu.filter(
+      card=>
+        beats(
+          card,
+          pair.attack
+        )
+    );
+
+
+  if(
+    !possible.length
+  ){
+
+    defenderTaking=
+      true;
+
+
+    render();
+
+    return;
+
+  }
+
+
+  const defense=
+    cheapest(
+      possible
+    );
+
+
+  pair.defense=
+    removeCard(
+      cpu,
+      defense.id
+    );
+
+
+  render();
+
+}
+
+
+/* =========================
+   CPU ATTACK
+========================= */
+
+function cpuAttack(){
+
+  if(
+    attacker!=="cpu"
+    ||
+    gameOver
+  ){
+
+    return;
+
+  }
+
+
+  const possible=
+    cpu.filter(
+      canAttack
+    );
+
+
+  if(
+    !possible.length
+  ){
+
+    if(
+      table.length
+    ){
+
+      successfulDefense();
+
+    }
+
+
+    return;
+
+  }
+
+
+  const attack=
+    cheapest(
+      possible
+    );
+
+
+  table.push({
+
+    attack:
+      removeCard(
+        cpu,
+        attack.id
+      ),
+
+    defense:null
+
+  });
+
+
+  render();
+
+}
+
+
+/* =========================
+   CPU CONTINUE
+========================= */
+
+function cpuContinueAttack(){
+
+  if(
+    attacker!=="cpu"
+    ||
+    gameOver
+  ){
+
+    return;
+
+  }
+
+
+  if(
+    defenderTaking
+  ){
+
+    const possible=
+      cpu.filter(
+        canAttack
+      );
+
+
+    if(
+      possible.length
+    ){
+
       const attack=
-        cheapest(possible);
+        cheapest(
+          possible
+        );
+
 
       table.push({
-        attack:removeCard(cpu,attack.id),
+
+        attack:
+          removeCard(
+            cpu,
+            attack.id
+          ),
+
         defense:null
+
       });
+
 
       render();
 
+
       setTimeout(
         cpuContinueAttack,
-        300
+        320
       );
-    }
-    else{
-      finishTake();
+
     }
 
+    else{
+
+      finishTake();
+
+    }
+
+
     return;
+
   }
+
 
   const possible=
-    cpu.filter(canAttack);
+    cpu.filter(
+      canAttack
+    );
+
+
+  /*
+    CPU пока не будет
+    бездумно наваливать
+    все 6 карт
+  */
 
   if(
-    possible.length &&
-    table.length<Math.min(3,maxAttacks())
+    possible.length
+    &&
+    table.length
+      <
+      Math.min(
+        3,
+        maxAttacks()
+      )
   ){
+
     const attack=
-      cheapest(possible);
+      cheapest(
+        possible
+      );
+
 
     table.push({
-      attack:removeCard(cpu,attack.id),
+
+      attack:
+        removeCard(
+          cpu,
+          attack.id
+      ),
+
       defense:null
+
     });
 
+
     render();
+
   }
+
   else{
+
     successfulDefense();
+
   }
+
 }
 
+
+/* =========================
+   PLAYER TAKE
+========================= */
+
 function playerTake(){
-  if(defender!=="player"){
+
+  if(
+    defender!=="player"
+  ){
+
     return;
+
   }
 
-  defenderTaking=true;
+
+  defenderTaking=
+    true;
+
 
   render();
+
 
   setTimeout(
     cpuContinueAttack,
     350
   );
+
 }
+
+
+/* =========================
+   COLLECT
+========================= */
 
 function collectTable(hand){
-  for(const pair of table){
-    hand.push(pair.attack);
 
-    if(pair.defense){
-      hand.push(pair.defense);
+  for(
+    const pair
+    of table
+  ){
+
+    hand.push(
+      pair.attack
+    );
+
+
+    if(
+      pair.defense
+    ){
+
+      hand.push(
+        pair.defense
+      );
+
     }
+
   }
 
+
   table=[];
+
 }
+
+
+/* =========================
+   TAKE COMPLETE
+========================= */
 
 function finishTake(){
+
   const hand=
+
     defender==="player"
-      ?player
-      :cpu;
 
-  collectTable(hand);
+      ?
 
-  defenderTaking=false;
+        player
 
-  refill(()=>{
-    defenderStartCards=
-      defender==="player"
-        ?player.length
-        :cpu.length;
+      :
 
-    render();
+        cpu;
 
-    if(
-      !gameOver &&
-      attacker==="cpu"
-    ){
-      setTimeout(cpuAttack,400);
+
+  const target=
+
+    defender==="player"
+
+      ?
+
+        $("playerHand")
+
+      :
+
+        $("cpuHand");
+
+
+  flyTableCardsTo(
+    target,
+    ()=>{
+
+      collectTable(
+        hand
+      );
+
+
+      defenderTaking=
+        false;
+
+
+      refill(
+        ()=>{
+
+          defenderStartCards=
+
+            defender==="player"
+
+              ?
+
+                player.length
+
+              :
+
+                cpu.length;
+
+
+          render();
+
+
+          if(
+            !gameOver
+            &&
+            attacker==="cpu"
+          ){
+
+            setTimeout(
+              cpuAttack,
+              420
+            );
+
+          }
+
+        }
+      );
+
     }
-  });
+  );
+
 }
+
+
+/* =========================
+   SUCCESSFUL DEFENSE
+========================= */
 
 function successfulDefense(){
-  if(!table.length){
-    return;
-  }
-
-  table=[];
-
-  [attacker,defender]=
-    [defender,attacker];
-
-  defenderTaking=false;
-
-  refill(()=>{
-    defenderStartCards=
-      defender==="player"
-        ?player.length
-        :cpu.length;
-
-    render();
-
-    if(
-      !gameOver &&
-      attacker==="cpu"
-    ){
-      setTimeout(cpuAttack,400);
-    }
-  });
-}
-
-function checkGameEnd(){
-  if(deck.length){
-    return;
-  }
 
   if(
-    player.length===0 ||
+    !table.length
+  ){
+
+    return;
+
+  }
+
+
+  const discarded=
+    table.reduce(
+      (
+        sum,
+        pair
+      )=>
+
+        sum
+        +
+        1
+        +
+        (
+          pair.defense
+            ?1
+            :0
+        ),
+
+      0
+    );
+
+
+  const discardTarget=
+    $("discard");
+
+
+  flyTableCardsTo(
+    discardTarget,
+    ()=>{
+
+      discardCount+=
+        discarded;
+
+
+      table=[];
+
+
+      /*
+        Отбившийся
+        становится атакующим
+      */
+
+      [
+        attacker,
+        defender
+      ]=
+      [
+        defender,
+        attacker
+      ];
+
+
+      defenderTaking=
+        false;
+
+
+      refill(
+        ()=>{
+
+          defenderStartCards=
+
+            defender==="player"
+
+              ?
+
+                player.length
+
+              :
+
+                cpu.length;
+
+
+          render();
+
+
+          if(
+            !gameOver
+            &&
+            attacker==="cpu"
+          ){
+
+            setTimeout(
+              cpuAttack,
+              420
+            );
+
+          }
+
+        }
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================
+   END GAME
+========================= */
+
+function checkGameEnd(){
+
+  if(
+    deck.length
+  ){
+
+    return;
+
+  }
+
+
+  if(
+    player.length===0
+    ||
     cpu.length===0
   ){
-    gameOver=true;
+
+    gameOver=
+      true;
+
 
     render();
 
-    setTimeout(()=>{
-      if(
-        player.length===0 &&
-        cpu.length===0
-      ){
-        alert("Ничья");
-      }
-      else if(player.length===0){
-        alert("Ты выиграл!");
-      }
-      else{
-        alert("Ты дурак!");
-      }
 
-      $("startScreen")
-        .classList
-        .remove("hidden");
+    setTimeout(
+      showResult,
+      250
+    );
 
-    },200);
   }
+
 }
+
+
+function showResult(){
+
+  const overlay=
+    $("resultOverlay");
+
+
+  const icon=
+    $("resultIcon");
+
+
+  const title=
+    $("resultTitle");
+
+
+  const text=
+    $("resultText");
+
+
+  if(
+    player.length===0
+    &&
+    cpu.length===0
+  ){
+
+    icon.textContent=
+      "🤝";
+
+    title.textContent=
+      "Ничья";
+
+    text.textContent=
+      "Карты закончились одновременно.";
+
+  }
+
+  else if(
+    player.length===0
+  ){
+
+    icon.textContent=
+      "🏆";
+
+    title.textContent=
+      "Ты выиграл";
+
+    text.textContent=
+      "У тебя не осталось карт.";
+
+  }
+
+  else{
+
+    icon.textContent=
+      "🃏";
+
+    title.textContent=
+      "Ты дурак";
+
+    text.textContent=
+      "Компьютер избавился от всех карт раньше.";
+
+  }
+
+
+  overlay
+    .classList
+    .remove(
+      "hidden"
+    );
+
+}
+
+
+/* =========================
+   EVENTS
+========================= */
 
 $("playerHand")
   .addEventListener(
     "click",
     event=>{
-      const card=
+
+      const element=
         event.target.closest(
           ".card[data-id]"
         );
 
-      if(card){
-        playerCardClick(
-          card.dataset.id
-        );
+
+      if(!element){
+
+        return;
+
       }
+
+
+      playerCardClick(
+        element.dataset.id,
+        element
+      );
+
     }
   );
 
-$("startButton").onclick=startGame;
+
+$("startButton")
+  .onclick=
+    startGame;
+
+
+$("againButton")
+  .onclick=
+    startGame;
+
 
 render();
+
 </script>
 
 </body>
