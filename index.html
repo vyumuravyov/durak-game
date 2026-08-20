@@ -4,2417 +4,729 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Дурак</title>
-
 <style>
-*{
-  box-sizing:border-box;
-}
-
-html,
-body{
-  margin:0;
-  width:100%;
-  height:100%;
-}
-
-body{
-  overflow:hidden;
-  font-family:Inter,Arial,sans-serif;
-  background:#06150f;
-  color:#fff;
-}
-
-button{
-  font:inherit;
-}
-
-.game{
-  position:relative;
-  width:100vw;
-  height:100vh;
-  min-height:650px;
-  overflow:hidden;
-
-  background:
-    radial-gradient(
-      circle at 50% 45%,
-      #1b6847 0,
-      #104a34 38%,
-      #0a3022 70%,
-      #061911 100%
-    );
-}
-
-.game:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  opacity:.16;
-
-  background-image:
-    repeating-linear-gradient(
-      35deg,
-      rgba(255,255,255,.035) 0 1px,
-      transparent 1px 4px
-    ),
-    repeating-linear-gradient(
-      -35deg,
-      rgba(0,0,0,.04) 0 1px,
-      transparent 1px 5px
-    );
-}
-
-.game:after{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-
-  background:
-    radial-gradient(
-      circle at 50% 48%,
-      transparent 45%,
-      rgba(0,0,0,.2) 100%
-    );
-}
-
-
-/* HEADER */
-
-.header{
-  position:absolute;
-  top:18px;
-  left:24px;
-  right:24px;
-
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-
-  z-index:50;
-}
-
-.logo{
-  font-size:26px;
-  font-weight:900;
-  letter-spacing:2px;
-
-  text-shadow:
-    0 3px 12px rgba(0,0,0,.4);
-}
-
-.logo small{
-  display:block;
-  margin-top:3px;
-
-  font-size:9px;
-  letter-spacing:4px;
-
-  color:#e6ca7d;
-}
-
-.status{
-  padding:10px 16px;
-
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:24px;
-
-  background:rgba(6,26,18,.72);
-
-  backdrop-filter:blur(8px);
-
-  box-shadow:
-    0 8px 25px rgba(0,0,0,.18);
-
-  font-size:13px;
-  color:#eef4f0;
-}
-
-
-/* CARD */
-
-.card{
-  width:84px;
-  height:118px;
-
-  position:relative;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  flex:0 0 auto;
-
-  border-radius:11px;
-
-  border:1px solid #cfc7ba;
-
-  background:
-    linear-gradient(
-      145deg,
-      #fffefa,
-      #eee8de
-    );
-
-  color:#171717;
-
-  font-size:32px;
-  font-weight:700;
-
-  box-shadow:
-    0 10px 23px rgba(0,0,0,.44);
-
-  user-select:none;
-
-  transform-origin:center center;
-}
-
-.card.red{
-  color:#c92735;
-}
-
-.corner{
-  position:absolute;
-
-  left:8px;
-  top:7px;
-
-  font-size:17px;
-  line-height:16px;
-
-  text-align:center;
-}
-
-.corner span{
-  display:block;
-  font-size:16px;
-}
-
-.corner.bottom{
-  left:auto;
-  top:auto;
-
-  right:8px;
-  bottom:7px;
-
-  transform:rotate(180deg);
-}
-
-.card.back{
-  border:5px solid #eee8dc;
-
-  background:
-    repeating-linear-gradient(
-      45deg,
-      #173b67 0 5px,
-      #eee6d8 5px 8px,
-      #942b36 8px 13px,
-      #eee6d8 13px 16px
-    );
-}
-
-
-/* HANDS */
-
-.hand{
-  position:absolute;
-
-  left:50%;
-
-  transform:translateX(-50%);
-
-  height:160px;
-
-  z-index:30;
-}
-
-.cpu-hand{
-  top:64px;
-}
-
-.player-hand{
-  bottom:-4px;
-}
-
-.hand .card{
-  position:absolute;
-
-  left:50%;
-  top:0;
-
-  will-change:transform;
-
-  transition:
-    transform .52s cubic-bezier(.22,.78,.22,1),
-    opacity .22s ease,
-    filter .22s ease,
-    box-shadow .2s ease;
-}
-
-.player-hand .card{
-  top:22px;
-}
-
-.player-hand .card.playable{
-  cursor:pointer;
-}
-
-.player-hand .card.playable:hover{
-  z-index:100 !important;
-
-  box-shadow:
-    0 18px 34px rgba(0,0,0,.52);
-}
-
-.player-hand .card.disabled{
-  opacity:.7;
-
-  filter:
-    brightness(.88)
-    saturate(.92);
-}
-
-
-/* TABLE */
-
-.table{
-  position:absolute;
-
-  left:50%;
-  top:46%;
-
-  transform:translate(-50%,-50%);
-
-  width:min(760px,66vw);
-  min-height:318px;
-
-  display:grid;
-
-  grid-template-columns:
-    repeat(3,120px);
-
-  grid-auto-rows:154px;
-
-  justify-content:center;
-  align-content:center;
-
-  gap:10px 26px;
-
-  z-index:15;
-}
-
-.pair{
-  width:120px;
-  height:154px;
-
-  position:relative;
-}
-
-.pair .card{
-  position:absolute;
-
-  left:0;
-  top:5px;
-}
-
-.pair .card.defense{
-  left:30px;
-  top:28px;
-
-  transform:rotate(8deg);
-}
-
-
-/* DECK */
-
-.deck-zone{
-  position:absolute;
-
-  left:6%;
-  top:46%;
-
-  transform:translateY(-50%);
-
-  width:180px;
-  height:175px;
-
-  z-index:12;
-}
-
-.deck-card{
-  position:absolute;
-
-  left:0;
-  top:18px;
-
-  z-index:4;
-}
-
-.deck-trump{
-  position:absolute;
-
-  left:40px;
-  top:18px;
-
-  z-index:1;
-
-  transform:rotate(90deg);
-}
-
-.deck-card .card,
-.deck-trump .card{
-  margin:0;
-}
-
-.deck-count{
-  position:absolute;
-
-  left:4px;
-  top:145px;
-
-  font-size:11px;
-
-  color:#c4d0ca;
-}
-
-.trump-symbol{
-  position:absolute;
-
-  left:112px;
-  top:50px;
-
-  font-size:34px;
-}
-
-
-/* DISCARD */
-
-.discard{
-  position:absolute;
-
-  right:7%;
-  bottom:25%;
-
-  width:105px;
-  height:135px;
-
-  z-index:10;
-
-  opacity:.88;
-}
-
-.discard-card{
-  position:absolute;
-
-  width:70px;
-  height:98px;
-
-  left:17px;
-  top:10px;
-
-  border:4px solid #eae4d8;
-  border-radius:9px;
-
-  background:
-    repeating-linear-gradient(
-      45deg,
-      #173b67 0 5px,
-      #eee6d8 5px 8px,
-      #942b36 8px 13px,
-      #eee6d8 13px 16px
-    );
-
-  box-shadow:
-    0 8px 18px rgba(0,0,0,.32);
-}
-
-.discard-card:nth-child(1){
-  transform:rotate(-7deg);
-}
-
-.discard-card:nth-child(2){
-  transform:rotate(5deg);
-}
-
-.discard-card:nth-child(3){
-  transform:rotate(-1deg);
-}
-
-.discard-label{
-  position:absolute;
-
-  left:0;
-  right:0;
-  bottom:-3px;
-
-  text-align:center;
-
-  font-size:9px;
-  letter-spacing:2px;
-
-  text-transform:uppercase;
-
-  color:#aab8b1;
-}
-
-
-/* ACTION */
-
-.action{
-  position:absolute;
-
-  right:6%;
-  top:46%;
-
-  transform:translateY(-50%);
-
-  z-index:40;
-}
-
-.action button{
-  min-width:112px;
-
-  padding:12px 20px;
-
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:10px;
-
-  background:#eee9df;
-
-  color:#18241e;
-
-  font-weight:800;
-
-  cursor:pointer;
-
-  box-shadow:
-    0 7px 18px rgba(0,0,0,.25);
-
-  transition:
-    transform .14s ease,
-    filter .14s ease;
-}
-
-.action button:hover{
-  transform:translateY(-2px);
-
-  filter:brightness(1.05);
-}
-
-.action button.danger{
-  background:#96323d;
-
-  color:#fff;
-}
-
-.hidden{
-  display:none !important;
-}
-
-
-/* FLY */
-
-.flying-card{
-  position:fixed !important;
-
-  z-index:1000 !important;
-
-  margin:0 !important;
-
-  pointer-events:none !important;
-
-  will-change:
-    transform,
-    opacity;
-}
-
-
-/* START / RESULT */
-
-.start-screen,
-.result-overlay{
-  position:fixed;
-
-  inset:0;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  z-index:200;
-
-  background:
-    radial-gradient(
-      circle at 50% 40%,
-      #15452f,
-      #061a12
-    );
-}
-
-.start-box{
-  width:390px;
-
-  padding:34px;
-
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:24px;
-
-  background:rgba(10,35,24,.96);
-
-  box-shadow:
-    0 30px 80px rgba(0,0,0,.5);
-}
-
-.start-box h1{
-  margin:0;
-
-  font-size:46px;
-  letter-spacing:3px;
-}
-
-.start-box p{
-  margin:8px 0 28px;
-
-  color:#aab9b1;
-
-  line-height:1.45;
-}
-
-.start-box button,
-.result-box button{
-  width:100%;
-
-  padding:14px;
-
-  border:0;
-  border-radius:11px;
-
-  background:#e8c975;
-
-  color:#1b231e;
-
-  font-weight:900;
-
-  cursor:pointer;
-}
-
-.result-overlay{
-  z-index:300;
-
-  background:rgba(2,12,8,.74);
-
-  backdrop-filter:blur(7px);
-}
-
-.result-box{
-  width:390px;
-
-  padding:34px;
-
-  text-align:center;
-
-  border-radius:25px;
-
-  color:#17201b;
-
-  background:
-    linear-gradient(
-      145deg,
-      #fffdf6,
-      #e9e2d4
-    );
-
-  box-shadow:
-    0 30px 90px rgba(0,0,0,.54);
-}
-
-.result-icon{
-  font-size:46px;
-}
-
-.result-title{
-  margin:8px 0 0;
-
-  font-size:31px;
-}
-
-.result-text{
-  margin:8px 0 22px;
-
-  color:#655f56;
-}
-
-.result-box button{
-  background:#174b35;
-
-  color:#fff;
-}
-
-
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%}
+body{overflow:hidden;font-family:Inter,Arial,sans-serif;background:#06150f;color:#fff}
+button{font:inherit}
+.game{position:relative;width:100vw;height:100vh;min-height:650px;overflow:hidden;background:radial-gradient(circle at 50% 45%,#1b6847 0,#104a34 38%,#0a3022 70%,#061911 100%)}
+.game:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.14;background-image:repeating-linear-gradient(35deg,rgba(255,255,255,.035) 0 1px,transparent 1px 4px),repeating-linear-gradient(-35deg,rgba(0,0,0,.04) 0 1px,transparent 1px 5px)}
+.game:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 48%,transparent 45%,rgba(0,0,0,.2) 100%)}
+.header{position:absolute;top:18px;left:24px;right:24px;display:flex;justify-content:space-between;align-items:flex-start;z-index:50}
+.logo{font-size:26px;font-weight:900;letter-spacing:2px;text-shadow:0 3px 12px rgba(0,0,0,.4)}
+.logo small{display:block;margin-top:3px;font-size:9px;letter-spacing:4px;color:#e6ca7d}
+.status{padding:10px 16px;border:1px solid rgba(255,255,255,.09);border-radius:24px;background:rgba(6,26,18,.72);backdrop-filter:blur(8px);box-shadow:0 8px 25px rgba(0,0,0,.18);font-size:13px;color:#eef4f0}
+.card{width:84px;height:118px;position:relative;display:flex;align-items:center;justify-content:center;flex:0 0 auto;border-radius:11px;border:1px solid #cfc7ba;background:linear-gradient(145deg,#fffefa,#eee8de);color:#171717;font-size:32px;font-weight:700;box-shadow:0 10px 23px rgba(0,0,0,.44);user-select:none;transform-origin:center center}
+.card.red{color:#c92735}
+.corner{position:absolute;left:8px;top:7px;font-size:17px;line-height:16px;text-align:center}
+.corner span{display:block;font-size:16px}
+.corner.bottom{left:auto;top:auto;right:8px;bottom:7px;transform:rotate(180deg)}
+.card.back{border:5px solid #eee8dc;background:repeating-linear-gradient(45deg,#173b67 0 5px,#eee6d8 5px 8px,#942b36 8px 13px,#eee6d8 13px 16px)}
+.hand{position:absolute;left:50%;transform:translateX(-50%);height:160px;z-index:30}
+.cpu-hand{top:64px}
+.player-hand{bottom:-4px}
+.hand .card{position:absolute;left:50%;top:0;will-change:transform;transition:transform .48s cubic-bezier(.22,.78,.22,1),opacity .22s ease,filter .22s ease,box-shadow .2s ease}
+.player-hand .card{top:22px}
+.player-hand .card.playable{cursor:pointer}
+.player-hand .card.playable:hover{z-index:100!important;box-shadow:0 18px 34px rgba(0,0,0,.52)}
+.player-hand .card.disabled{opacity:.7;filter:brightness(.88) saturate(.92)}
+.table{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(760px,66vw);min-height:318px;display:grid;grid-template-columns:repeat(3,120px);grid-auto-rows:154px;justify-content:center;align-content:center;gap:10px 26px;z-index:15}
+.pair{width:120px;height:154px;position:relative;transform:translate(var(--px,0px),var(--py,0px)) rotate(var(--pr,0deg));transition:transform .3s ease}
+.pair .card{position:absolute;left:0;top:5px}
+.pair .card.defense{left:30px;top:28px;transform:rotate(8deg)}
+.deck-zone{position:absolute;left:6%;top:46%;transform:translateY(-50%);width:180px;height:175px;z-index:12}
+.deck-card{position:absolute;left:0;top:18px;z-index:4}
+.deck-trump{position:absolute;left:40px;top:18px;z-index:1;transform:rotate(90deg)}
+.deck-card .card,.deck-trump .card{margin:0}
+.deck-count{position:absolute;left:4px;top:145px;font-size:11px;color:#c4d0ca}
+.trump-symbol{position:absolute;left:112px;top:50px;font-size:34px}
+.discard{position:absolute;right:7%;bottom:25%;width:105px;height:135px;z-index:10;opacity:.88}
+.discard-card{position:absolute;width:70px;height:98px;left:17px;top:10px;border:4px solid #eae4d8;border-radius:9px;background:repeating-linear-gradient(45deg,#173b67 0 5px,#eee6d8 5px 8px,#942b36 8px 13px,#eee6d8 13px 16px);box-shadow:0 8px 18px rgba(0,0,0,.32)}
+.discard-card:nth-child(1){transform:rotate(-7deg)}
+.discard-card:nth-child(2){transform:rotate(5deg)}
+.discard-card:nth-child(3){transform:rotate(-1deg)}
+.discard-label{position:absolute;left:0;right:0;bottom:-3px;text-align:center;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#aab8b1}
+.action{position:absolute;right:6%;top:46%;transform:translateY(-50%);z-index:40}
+.action button{min-width:112px;padding:12px 20px;border:1px solid rgba(255,255,255,.14);border-radius:10px;background:#eee9df;color:#18241e;font-weight:800;cursor:pointer;box-shadow:0 7px 18px rgba(0,0,0,.25);transition:transform .14s ease,filter .14s ease}
+.action button:hover{transform:translateY(-2px);filter:brightness(1.05)}
+.action button.danger{background:#96323d;color:#fff}
+.hidden{display:none!important}
+.flying-card{position:fixed!important;z-index:1000!important;margin:0!important;pointer-events:none!important;will-change:transform,opacity}
+.start-screen,.result-overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:200;background:radial-gradient(circle at 50% 40%,#15452f,#061a12)}
+.start-box{width:390px;padding:34px;border:1px solid rgba(255,255,255,.09);border-radius:24px;background:rgba(10,35,24,.96);box-shadow:0 30px 80px rgba(0,0,0,.5)}
+.start-box h1{margin:0;font-size:46px;letter-spacing:3px}
+.start-box p{margin:8px 0 28px;color:#aab9b1;line-height:1.45}
+.start-box button,.result-box button{width:100%;padding:14px;border:0;border-radius:11px;background:#e8c975;color:#1b231e;font-weight:900;cursor:pointer}
+.result-overlay{z-index:300;background:rgba(2,12,8,.74);backdrop-filter:blur(7px)}
+.result-box{width:390px;padding:34px;text-align:center;border-radius:25px;color:#17201b;background:linear-gradient(145deg,#fffdf6,#e9e2d4);box-shadow:0 30px 90px rgba(0,0,0,.54)}
+.result-icon{font-size:46px}
+.result-title{margin:8px 0 0;font-size:31px}
+.result-text{margin:8px 0 22px;color:#655f56}
+.result-box button{background:#174b35;color:#fff}
 @media(max-width:850px){
-
-  .card{
-    width:66px;
-    height:94px;
-
-    font-size:25px;
-  }
-
-  .corner{
-    font-size:14px;
-    line-height:13px;
-  }
-
-  .corner span{
-    font-size:13px;
-  }
-
-  .hand{
-    height:130px;
-  }
-
-  .player-hand{
-    bottom:-2px;
-  }
-
-  .player-hand .card{
-    top:18px;
-  }
-
-  .table{
-    width:56vw;
-
-    grid-template-columns:
-      repeat(2,92px);
-
-    grid-auto-rows:120px;
-
-    gap:8px 18px;
-  }
-
-  .pair{
-    width:92px;
-    height:120px;
-  }
-
-  .pair .card.defense{
-    left:23px;
-    top:22px;
-  }
-
-  .deck-zone{
-    left:2%;
-
-    transform:
-      translateY(-50%)
-      scale(.82);
-
-    transform-origin:left center;
-  }
-
-  .discard{
-    right:2%;
-
-    transform:scale(.8);
-
-    transform-origin:right bottom;
-  }
-
-  .action{
-    right:2%;
-  }
-}
-
+.card{width:66px;height:94px;font-size:25px}
+.corner{font-size:14px;line-height:13px}
+.corner span{font-size:13px}
+.hand{height:130px}
+.player-hand{bottom:-2px}
+.player-hand .card{top:18px}
+.table{width:56vw;grid-template-columns:repeat(2,92px);grid-auto-rows:120px;gap:8px 18px}
+.pair{width:92px;height:120px}
+.pair .card.defense{left:23px;top:22px}
+.deck-zone{left:2%;transform:translateY(-50%) scale(.82);transform-origin:left center}
+.discard{right:2%;transform:scale(.8);transform-origin:right bottom}
+.action{right:2%}}
 </style>
 </head>
-
-
 <body>
 
 <div class="game">
-
   <div class="header">
-
-    <div class="logo">
-      ДУРАК
-      <small>ПОДКИДНОЙ</small>
-    </div>
-
-    <div
-      class="status"
-      id="status"
-    >
-      Начинаем...
-    </div>
-
+    <div class="logo">ДУРАК<small>ПОДКИДНОЙ</small></div>
+    <div class="status" id="status">Начинаем...</div>
   </div>
 
-
-  <div
-    class="hand cpu-hand"
-    id="cpuHand"
-  ></div>
-
+  <div class="hand cpu-hand" id="cpuHand"></div>
 
   <div class="deck-zone">
-
-    <div
-      class="deck-trump"
-      id="deckTrump"
-    ></div>
-
-    <div
-      class="deck-card"
-      id="deckCard"
-    ></div>
-
-    <div
-      class="deck-count"
-      id="deckCount"
-    ></div>
-
-    <div
-      class="trump-symbol"
-      id="trumpSymbol"
-    ></div>
-
+    <div class="deck-trump" id="deckTrump"></div>
+    <div class="deck-card" id="deckCard"></div>
+    <div class="deck-count" id="deckCount"></div>
+    <div class="trump-symbol" id="trumpSymbol"></div>
   </div>
 
+  <div class="table" id="table"></div>
 
-  <div
-    class="table"
-    id="table"
-  ></div>
-
-
-  <div
-    class="discard"
-    id="discard"
-  >
-
-    <div class="discard-label">
-      Бито
-    </div>
-
+  <div class="discard" id="discard">
+    <div class="discard-label">Бито</div>
   </div>
-
 
   <div class="action">
-
-    <button
-      id="actionButton"
-      class="hidden"
-    ></button>
-
+    <button id="actionButton" class="hidden"></button>
   </div>
 
-
-  <div
-    class="hand player-hand"
-    id="playerHand"
-  ></div>
-
+  <div class="hand player-hand" id="playerHand"></div>
 </div>
 
-
-<div
-  class="start-screen"
-  id="startScreen"
->
-
+<div class="start-screen" id="startScreen">
   <div class="start-box">
-
     <h1>ДУРАК</h1>
-
-    <p>
-      Классический подкидной Дурак.
-      Колода 36 карт.
-    </p>
-
-    <button id="startButton">
-      Начать игру
-    </button>
-
+    <p>Классический подкидной Дурак. Колода 36 карт.</p>
+    <button id="startButton">Начать игру</button>
   </div>
-
 </div>
 
-
-<div
-  class="result-overlay hidden"
-  id="resultOverlay"
->
-
+<div class="result-overlay hidden" id="resultOverlay">
   <div class="result-box">
-
-    <div
-      class="result-icon"
-      id="resultIcon"
-    ></div>
-
-    <h2
-      class="result-title"
-      id="resultTitle"
-    ></h2>
-
-    <div
-      class="result-text"
-      id="resultText"
-    ></div>
-
-    <button id="againButton">
-      Играть ещё
-    </button>
-
+    <div class="result-icon" id="resultIcon"></div>
+    <h2 class="result-title" id="resultTitle"></h2>
+    <div class="result-text" id="resultText"></div>
+    <button id="againButton">Играть ещё</button>
   </div>
-
 </div>
-
 
 <script>
+const suits=["♠","♥","♦","♣"];
+const suitOrder=["♣","♦","♥","♠"];
+const ranks=["6","7","8","9","10","J","Q","K","A"];
+const $=id=>document.getElementById(id);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 
-const suits=[
-  "♠",
-  "♥",
-  "♦",
-  "♣"
-];
+let deck=[],player=[],cpu=[],table=[];
+let discardCount=0,trump=null,bottomTrump=null;
+let attacker="player",defender="cpu";
+let defenderTaking=false,defenderStartCards=6;
+let gameOver=false,locked=false,audioCtx=null;
 
-const suitOrder=[
-  "♣",
-  "♦",
-  "♥",
-  "♠"
-];
-
-const ranks=[
-  "6",
-  "7",
-  "8",
-  "9",
-  "10",
-  "J",
-  "Q",
-  "K",
-  "A"
-];
-
-
-const $=
-  id=>
-    document.getElementById(id);
-
-
-const sleep=
-  ms=>
-    new Promise(
-      resolve=>
-        setTimeout(
-          resolve,
-          ms
-        )
-    );
-
-
-let deck=[];
-
-let player=[];
-
-let cpu=[];
-
-let table=[];
-
-
-let discardCount=0;
-
-let trump=null;
-
-let bottomTrump=null;
-
-
-let attacker="player";
-
-let defender="cpu";
-
-
-let defenderTaking=false;
-
-let defenderStartCards=6;
-
-
-let gameOver=false;
-
-let locked=false;
-
-let audioCtx=null;
-
-
-/* BASIC */
-
-function isRed(suit){
-
-  return (
-    suit==="♥"
-    ||
-    suit==="♦"
-  );
-
-}
-
-
-function value(card){
-
-  return ranks.indexOf(
-    card.rank
-  );
-
-}
-
+function isRed(s){return s==="♥"||s==="♦"}
+function value(c){return ranks.indexOf(c.rank)}
 
 function createDeck(){
-
-  const result=[];
-
-  let id=0;
-
-
-  for(
-    const suit
-    of suits
-  ){
-
-    for(
-      const rank
-      of ranks
-    ){
-
-      result.push({
-
-        suit,
-
-        rank,
-
-        id:
-          "c"+id++
-
-      });
-
-    }
-
-  }
-
-
-  return result;
-
+  let out=[],id=0;
+  for(const suit of suits)
+    for(const rank of ranks)
+      out.push({suit,rank,id:"c"+id++});
+  return out;
 }
 
-
-function shuffle(array){
-
-  for(
-    let i=array.length-1;
-    i>0;
-    i--
-  ){
-
-    const j=
-      Math.floor(
-        Math.random()*
-        (i+1)
-      );
-
-
-    [
-      array[i],
-      array[j]
-    ]=
-    [
-      array[j],
-      array[i]
-    ];
-
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
   }
-
-
-  return array;
-
+  return a;
 }
 
-
-function removeCard(
-  hand,
-  id
-){
-
-  const index=
-
-    hand.findIndex(
-      card=>
-        card.id===id
-    );
-
-
-  if(
-    index<0
-  ){
-
-    return null;
-
-  }
-
-
-  return hand.splice(
-    index,
-    1
-  )[0];
-
+function removeCard(hand,id){
+  const i=hand.findIndex(c=>c.id===id);
+  return i<0?null:hand.splice(i,1)[0];
 }
-
-
-/* SOUND */
 
 function sound(kind){
-
   try{
+    if(!audioCtx)
+      audioCtx=new (window.AudioContext||window.webkitAudioContext)();
 
-    if(!audioCtx){
+    const o=audioCtx.createOscillator();
+    const g=audioCtx.createGain();
 
-      audioCtx=
-        new (
-          window.AudioContext
-          ||
-          window.webkitAudioContext
-        )();
+    o.type="triangle";
+    o.frequency.value=kind==="take"?160:kind==="beat"?500:320;
 
-    }
+    g.gain.setValueAtTime(.014,audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.07);
 
-
-    const oscillator=
-      audioCtx.createOscillator();
-
-
-    const gain=
-      audioCtx.createGain();
-
-
-    oscillator.type=
-      "triangle";
-
-
-    oscillator.frequency.value=
-
-      kind==="take"
-
-        ?160
-
-        :kind==="beat"
-
-          ?500
-
-          :320;
-
-
-    gain.gain.setValueAtTime(
-      .016,
-      audioCtx.currentTime
-    );
-
-
-    gain.gain.exponentialRampToValueAtTime(
-      .0001,
-      audioCtx.currentTime+.07
-    );
-
-
-    oscillator
-      .connect(gain)
-      .connect(
-        audioCtx.destination
-      );
-
-
-    oscillator.start();
-
-
-    oscillator.stop(
-      audioCtx.currentTime+.075
-    );
-
-  }
-
-  catch(error){}
-
+    o.connect(g).connect(audioCtx.destination);
+    o.start();
+    o.stop(audioCtx.currentTime+.075);
+  }catch(e){}
 }
 
-
-/* CARD */
-
-function cardHTML(
-  card,
-  back=false,
-  extra=""
-){
-
-  if(back){
-
-    return `
-
-      <div
-        class="
-          card
-          back
-          ${extra}
-        "
-
-        data-id="${card?.id||""}"
-      ></div>
-
-    `;
-
-  }
-
+function cardHTML(card,back=false,extra=""){
+  if(back)
+    return `<div class="card back ${extra}" data-id="${card?.id||""}"></div>`;
 
   return `
-
-    <div
-      class="
-        card
-        ${isRed(card.suit)?"red":""}
-        ${extra}
-      "
-
-      data-id="${card.id}"
-    >
-
-      <div class="corner">
-
-        ${card.rank}
-
-        <span>
-          ${card.suit}
-        </span>
-
-      </div>
-
+    <div class="card ${isRed(card.suit)?"red":""} ${extra}" data-id="${card.id}">
+      <div class="corner">${card.rank}<span>${card.suit}</span></div>
       ${card.suit}
-
-      <div class="corner bottom">
-
-        ${card.rank}
-
-        <span>
-          ${card.suit}
-        </span>
-
-      </div>
-
+      <div class="corner bottom">${card.rank}<span>${card.suit}</span></div>
     </div>
-
   `;
-
 }
-
-
-/* SORTING */
 
 function sortedPlayerHand(){
+  return [...player].sort((a,b)=>{
+    const at=a.suit===trump;
+    const bt=b.suit===trump;
 
-  return [
-    ...player
-  ].sort(
-    (a,b)=>{
+    if(at!==bt) return at?1:-1;
+    if(value(a)!==value(b)) return value(a)-value(b);
 
-      const aTrump=
-        a.suit===trump;
-
-      const bTrump=
-        b.suit===trump;
-
-
-      /*
-        Все козыри справа.
-      */
-
-      if(
-        aTrump!==bTrump
-      ){
-
-        return (
-          aTrump
-            ?1
-            :-1
-        );
-
-      }
-
-
-      /*
-        6,6 → 7,7 → 8,8...
-      */
-
-      if(
-        value(a)!==
-        value(b)
-      ){
-
-        return (
-          value(a)
-          -
-          value(b)
-        );
-
-      }
-
-
-      /*
-        Одинаковое достоинство.
-      */
-
-      return (
-        suitOrder.indexOf(
-          a.suit
-        )
-        -
-        suitOrder.indexOf(
-          b.suit
-        )
-      );
-
-    }
-  );
-
+    return suitOrder.indexOf(a.suit)-suitOrder.indexOf(b.suit);
+  });
 }
 
-
-/* RULES */
-
-function beats(
-  defenseCard,
-  attackCard
-){
-
+function beats(d,a){
   return (
-
-    (
-      defenseCard.suit===
-        attackCard.suit
-
-      &&
-
-      value(defenseCard)>
-        value(attackCard)
-    )
-
-    ||
-
-    (
-      defenseCard.suit===
-        trump
-
-      &&
-
-      attackCard.suit!==
-        trump
-    )
-
+    (d.suit===a.suit&&value(d)>value(a)) ||
+    (d.suit===trump&&a.suit!==trump)
   );
-
 }
-
 
 function tableRanks(){
-
-  const result=[];
-
-
-  for(
-    const pair
-    of table
-  ){
-
-    result.push(
-      pair.attack.rank
-    );
-
-
-    if(
-      pair.defense
-    ){
-
-      result.push(
-        pair.defense.rank
-      );
-
-    }
-
+  const out=[];
+  for(const p of table){
+    out.push(p.attack.rank);
+    if(p.defense) out.push(p.defense.rank);
   }
-
-
-  return result;
-
+  return out;
 }
-
 
 function maxAttacks(){
-
-  return Math.min(
-    6,
-    defenderStartCards
-  );
-
+  return Math.min(6,defenderStartCards);
 }
-
 
 function unresolved(){
-
-  return table.some(
-    pair=>
-      !pair.defense
-  );
-
+  return table.some(p=>!p.defense);
 }
 
-
-function canAttack(card){
-
+function canAttack(c){
   return (
-
-    table.length<
-      maxAttacks()
-
-    &&
-
-    (
-      !table.length
-
-      ||
-
-      tableRanks()
-        .includes(
-          card.rank
-        )
-    )
-
+    table.length<maxAttacks() &&
+    (!table.length||tableRanks().includes(c.rank))
   );
-
 }
 
+function canPlayerPlay(c){
+  if(gameOver||locked) return false;
 
-function canPlayerPlay(card){
-
-  if(
-    gameOver
-    ||
-    locked
-  ){
-
-    return false;
-
+  if(attacker==="player"){
+    if(!defenderTaking&&unresolved()) return false;
+    return canAttack(c);
   }
 
-
-  /*
-    Игрок атакует.
-  */
-
-  if(
-    attacker==="player"
-  ){
-
-    /*
-      Пока CPU ещё
-      не отбил предыдущую,
-      следующую не кидаем.
-    */
-
-    if(
-      !defenderTaking
-      &&
-      unresolved()
-    ){
-
-      return false;
-
-    }
-
-
-    return canAttack(
-      card
-    );
-
+  if(defender==="player"&&!defenderTaking){
+    const p=table.find(p=>!p.defense);
+    return !!p&&beats(c,p.attack);
   }
-
-
-  /*
-    Игрок защищается.
-  */
-
-  if(
-    defender==="player"
-    &&
-    !defenderTaking
-  ){
-
-    const pair=
-
-      table.find(
-        pair=>
-          !pair.defense
-      );
-
-
-    return (
-
-      !!pair
-
-      &&
-
-      beats(
-        card,
-        pair.attack
-      )
-
-    );
-
-  }
-
 
   return false;
-
 }
 
 
-/* DYNAMIC HAND */
+/* ПЛАВНАЯ РУКА */
 
-/*
-  Важное изменение.
+function handLayout(cards,isCpu=false){
+  const total=cards.length;
+  const cardWidth=window.innerWidth<=850?66:84;
 
-  Рука больше не использует
-  фиксированный overlap.
-
-  Чем больше карт,
-  тем плотнее веер.
-*/
-
-function handLayout(
-  cards,
-  isCpu=false
-){
-
-  const total=
-    cards.length;
-
-
-  const cardWidth=
-
-    window.innerWidth<=850
-
-      ?66
-
-      :84;
-
-
-  const maxWidth=
-
-    Math.min(
-
-      window.innerWidth
-      *
-      (
-        isCpu
-          ?.50
-          :.86
-      ),
-
-      isCpu
-        ?500
-        :980
-
-    );
-
-
-  const naturalStep=
-    58;
-
+  const maxWidth=Math.min(
+    window.innerWidth*(isCpu?.50:.86),
+    isCpu?500:980
+  );
 
   const step=
-
     total<=1
-
       ?0
-
-      :
-
-        Math.max(
-
-          20,
-
+      :Math.max(
+          18,
           Math.min(
-
-            naturalStep,
-
-            (
-              maxWidth
-              -
-              cardWidth
-            )
-            /
-            (
-              total-1
-            )
-
+            58,
+            (maxWidth-cardWidth)/(total-1)
           )
-
         );
-
 
   const totalWidth=
+    cardWidth+(total-1)*step;
 
-    cardWidth
-    +
-    (
-      total-1
-    )
-    *
-    step;
+  return cards.map((card,index)=>{
+    const rel=index-(total-1)/2;
 
+    const strength=
+      total>14?.8:
+      total>10?1.2:
+      total>7?1.7:
+      2.25;
 
-  return cards.map(
-    (
+    const rotation=
+      Math.max(-12,Math.min(12,rel*strength))
+      *(isCpu?-1:1);
+
+    const drop=
+      Math.abs(rel)*
+      (
+        total>14?.55:
+        total>10?.8:
+        total>7?1.1:
+        1.6
+      );
+
+    return {
       card,
-      index
-    )=>{
-
-      const relative=
-
-        index
-        -
-        (
-          total-1
-        )
-        /
-        2;
-
-
-      const rotationStrength=
-
-        total>12
-
-          ?1.1
-
-          :total>8
-
-            ?1.7
-
-            :2.35;
-
-
-      const rotation=
-
-        Math.max(
-
-          -12,
-
-          Math.min(
-            12,
-            relative
-            *
-            rotationStrength
-          )
-
-        )
-
-        *
-
-        (
-          isCpu
-            ?-1
-            :1
-        );
-
-
-      const drop=
-
-        Math.abs(
-          relative
-        )
-
-        *
-
-        (
-          total>12
-
-            ?.8
-
-            :total>8
-
-              ?1.2
-
-              :1.7
-        );
-
-
-      const x=
-
-        -
-        totalWidth/2
-
-        +
-
-        index
-        *
-        step;
-
-
-      return {
-
-        card,
-
-        x,
-
-        rotation,
-
-        drop,
-
-        z:
-          index+1
-
-      };
-
-    }
-  );
-
+      x:-totalWidth/2+index*step,
+      rotation,
+      drop,
+      z:index+1
+    };
+  });
 }
 
 
-/*
-  Не удаляем и не создаём
-  всю руку заново.
+/* FLIP АНИМАЦИЯ */
 
-  Уже существующие DOM-карты
-  просто переезжают
-  в новые координаты.
+function capturePositions(container){
+  const map=new Map();
 
-  Именно поэтому
-  пересортировка плавная.
-*/
+  container
+    .querySelectorAll(".card[data-id]")
+    .forEach(el=>{
+      const r=el.getBoundingClientRect();
 
-function syncHand(
-  container,
-  cards,
-  isCpu=false
-){
+      map.set(
+        el.dataset.id,
+        {
+          left:r.left,
+          top:r.top
+        }
+      );
+    });
 
-  const existing=
+  return map;
+}
 
-    new Map(
+function animateFlip(container,before){
+  container
+    .querySelectorAll(".card[data-id]")
+    .forEach(el=>{
+      const old=before.get(el.dataset.id);
 
-      [
-        ...
-        container.querySelectorAll(
-          ".card"
-        )
-      ]
-      .map(
-        element=>
-          [
-            element.dataset.id,
-            element
-          ]
-      )
+      if(!old) return;
 
-    );
+      const now=el.getBoundingClientRect();
 
-
-  const keep=
-
-    new Set(
-      cards.map(
-        card=>
-          card.id
-      )
-    );
-
-
-  for(
-    const [
-      id,
-      element
-    ]
-    of existing
-  ){
-
-    if(
-      !keep.has(id)
-    ){
-
-      element.remove();
-
-    }
-
-  }
-
-
-  const layout=
-
-    handLayout(
-      cards,
-      isCpu
-    );
-
-
-  const firstTrump=
-
-    isCpu
-
-      ?-1
-
-      :
-
-        cards.findIndex(
-          card=>
-            card.suit===trump
-        );
-
-
-  layout.forEach(
-    (
-      item,
-      index
-    )=>{
-
-      let element=
-
-        existing.get(
-          item.card.id
-        );
-
-
-      if(!element){
-
-        const wrapper=
-          document.createElement(
-            "div"
-          );
-
-
-        wrapper.innerHTML=
-
-          cardHTML(
-            item.card,
-            isCpu
-          );
-
-
-        element=
-          wrapper.firstElementChild;
-
-
-        element.style.opacity=
-          "0";
-
-
-        container.appendChild(
-          element
-        );
-
-
-        requestAnimationFrame(
-          ()=>{
-
-            element.style.opacity=
-              "1";
-
-          }
-        );
-
-      }
-
-
-      if(!isCpu){
-
-        element.classList.toggle(
-          "playable",
-          canPlayerPlay(
-            item.card
-          )
-        );
-
-
-        element.classList.toggle(
-          "disabled",
-          !canPlayerPlay(
-            item.card
-          )
-        );
-
-      }
-
-
-      let x=
-        item.x;
-
-
-      /*
-        Небольшой зазор
-        перед козырями.
-      */
+      const dx=old.left-now.left;
+      const dy=old.top-now.top;
 
       if(
-        !isCpu
-        &&
-        index===firstTrump
-        &&
-        firstTrump>0
-      ){
+        Math.abs(dx)<1 &&
+        Math.abs(dy)<1
+      ) return;
 
-        x+=18;
+      el.animate(
+        [
+          {
+            transform:
+              `translate(${dx}px,${dy}px) ${el.style.transform||""}`
+          },
+          {
+            transform:
+              el.style.transform||"none"
+          }
+        ],
+        {
+          duration:430,
+          easing:"cubic-bezier(.22,.78,.22,1)"
+        }
+      );
+    });
+}
 
-      }
+function syncHand(container,cards,isCpu=false){
+  const before=
+    capturePositions(container);
 
+  const existing=
+    new Map(
+      [
+        ...container.querySelectorAll(".card")
+      ].map(
+        el=>[
+          el.dataset.id,
+          el
+        ]
+      )
+    );
 
-      element.style.zIndex=
-        item.z;
+  const keep=
+    new Set(
+      cards.map(c=>c.id)
+    );
 
+  for(const [id,el] of existing){
+    if(!keep.has(id))
+      el.remove();
+  }
 
-      element.style.transform=
+  const layout=
+    handLayout(cards,isCpu);
 
-        `translateX(${x}px)
-         translateY(${item.drop}px)
-         rotate(${item.rotation}deg)`;
+  const firstTrump=
+    isCpu
+      ?-1
+      :cards.findIndex(
+          c=>c.suit===trump
+        );
 
+  layout.forEach((item,index)=>{
+    let el=
+      existing.get(item.card.id);
+
+    if(!el){
+      const wrap=
+        document.createElement("div");
+
+      wrap.innerHTML=
+        cardHTML(
+          item.card,
+          isCpu
+        );
+
+      el=
+        wrap.firstElementChild;
+
+      el.style.opacity="0";
+
+      container.appendChild(el);
+
+      requestAnimationFrame(
+        ()=>el.style.opacity="1"
+      );
     }
-  );
 
+    if(!isCpu){
+      const playable=
+        canPlayerPlay(item.card);
+
+      el.classList.toggle(
+        "playable",
+        playable
+      );
+
+      el.classList.toggle(
+        "disabled",
+        !playable
+      );
+    }
+
+    let x=item.x;
+
+    if(
+      !isCpu &&
+      index===firstTrump &&
+      firstTrump>0
+    ){
+      x+=18;
+    }
+
+    el.style.zIndex=
+      item.z;
+
+    el.style.transform=
+      `translateX(${x}px)
+       translateY(${item.drop}px)
+       rotate(${item.rotation}deg)`;
+  });
+
+  requestAnimationFrame(
+    ()=>animateFlip(
+      container,
+      before
+    )
+  );
 }
 
 
-/* RENDER */
+/* ЖИВОЙ СТОЛ */
+
+function pairJitter(i){
+  const xs=[-5,4,-2,5,-4,3];
+  const ys=[2,-3,4,-2,1,-4];
+  const rs=[-2.5,1.8,-1.3,2.3,-1.8,1.2];
+
+  return {
+    x:xs[i%6],
+    y:ys[i%6],
+    r:rs[i%6]
+  };
+}
 
 function renderCPU(){
-
   syncHand(
     $("cpuHand"),
     cpu,
     true
   );
-
 }
 
-
 function renderPlayer(){
-
   syncHand(
     $("playerHand"),
     sortedPlayerHand(),
     false
   );
-
 }
-
 
 function renderTable(){
+  $("table").innerHTML=
+    table.map((p,i)=>{
+      const j=pairJitter(i);
 
-  $("table")
-    .innerHTML=
-
-    table
-      .map(
-        (
-          pair,
-          index
-        )=>`
-
-          <div
-            class="pair"
-            data-pair="${index}"
-          >
-
-            ${
-              cardHTML(
-                pair.attack,
-                false,
-                "attack"
-              )
-            }
-
-            ${
-              pair.defense
-
-                ?
-
-                  cardHTML(
-                    pair.defense,
-                    false,
-                    "defense"
-                  )
-
-                :
-
-                  ""
-            }
-
-          </div>
-
-        `
-      )
-      .join("");
-
+      return `
+        <div
+          class="pair"
+          style="
+            --px:${j.x}px;
+            --py:${j.y}px;
+            --pr:${j.r}deg
+          "
+        >
+          ${cardHTML(p.attack,false,"attack")}
+          ${
+            p.defense
+              ?cardHTML(p.defense,false,"defense")
+              :""
+          }
+        </div>
+      `;
+    }).join("");
 }
-
 
 function renderDeck(){
-
-  $("deckCard")
-    .innerHTML=
-
+  $("deckCard").innerHTML=
     deck.length
+      ?cardHTML({id:"deck"},true)
+      :"";
 
-      ?
+  $("deckTrump").innerHTML=
+    deck.includes(bottomTrump)
+      ?cardHTML(bottomTrump)
+      :"";
 
-        cardHTML(
-          {
-            id:"deck"
-          },
-          true
-        )
-
-      :
-
-        "";
-
-
-  $("deckTrump")
-    .innerHTML=
-
-    deck.includes(
-      bottomTrump
-    )
-
-      ?
-
-        cardHTML(
-          bottomTrump
-        )
-
-      :
-
-        "";
-
-
-  $("deckCount")
-    .textContent=
-
+  $("deckCount").textContent=
     deck.length
+      ?`В колоде: ${deck.length}`
+      :"";
 
-      ?
+  $("trumpSymbol").textContent=
+    trump||"";
 
-        `В колоде: ${deck.length}`
-
-      :
-
-        "";
-
-
-  $("trumpSymbol")
-    .textContent=
-      trump || "";
-
-
-  $("trumpSymbol")
-    .style.color=
-
+  $("trumpSymbol").style.color=
     isRed(trump)
-
-      ?
-
-        "#e44c59"
-
-      :
-
-        "#fff";
-
+      ?"#e44c59"
+      :"#fff";
 }
-
 
 function renderDiscard(){
-
   const count=
-
     Math.min(
       3,
-      Math.ceil(
-        discardCount/2
-      )
+      Math.ceil(discardCount/2)
     );
 
-
-  $("discard")
-    .innerHTML=
-
+  $("discard").innerHTML=
     Array.from(
-      {
-        length:count
-      },
-
-      ()=>
-        '<div class="discard-card"></div>'
-
+      {length:count},
+      ()=>'<div class="discard-card"></div>'
     ).join("")
-
     +
-
-    `
-
-      <div class="discard-label">
-
-        ${
-          discardCount
-
-            ?
-
-              `Бито · ${discardCount}`
-
-            :
-
-              "Бито"
-        }
-
-      </div>
-
-    `;
-
+    `<div class="discard-label">
+      ${
+        discardCount
+          ?`Бито · ${discardCount}`
+          :"Бито"
+      }
+    </div>`;
 }
-
 
 function renderStatus(){
+  let text=
+    gameOver
+      ?"Игра окончена"
+      :defenderTaking
+        ?(
+          defender==="player"
+            ?"Ты забираешь"
+            :"Компьютер забирает"
+        )
+        :attacker==="player"
+          ?"Твой ход"
+          :unresolved()
+            ?"Отбейся"
+            :"Ход компьютера";
 
-  let text="";
-
-
-  if(gameOver){
-
-    text=
-      "Игра окончена";
-
-  }
-
-  else if(
-    defenderTaking
-  ){
-
-    text=
-
-      defender==="player"
-
-        ?
-
-          "Ты забираешь"
-
-        :
-
-          "Компьютер забирает";
-
-  }
-
-  else if(
-    attacker==="player"
-  ){
-
-    text=
-      "Твой ход";
-
-  }
-
-  else{
-
-    text=
-
-      unresolved()
-
-        ?
-
-          "Отбейся"
-
-        :
-
-          "Ход компьютера";
-
-  }
-
-
-  $("status")
-    .textContent=
-
-      `${text} · ${trump}`;
-
+  $("status").textContent=
+    `${text} · ${trump}`;
 }
-
 
 function renderAction(){
-
-  const button=
+  const b=
     $("actionButton");
 
+  b.className="hidden";
+  b.onclick=null;
 
-  button.className=
-    "hidden";
-
-
-  button.onclick=
-    null;
-
-
-  if(
-    gameOver
-    ||
-    locked
-  ){
-
+  if(gameOver||locked)
     return;
 
-  }
-
-
-  /*
-    Игрок защищается.
-  */
-
   if(
-    defender==="player"
-    &&
-    !defenderTaking
-    &&
+    defender==="player" &&
+    !defenderTaking &&
     unresolved()
   ){
-
-    button.textContent=
-      "Забрать";
-
-    button.className=
-      "danger";
-
-    button.onclick=
-      playerTake;
-
+    b.textContent="Забрать";
+    b.className="danger";
+    b.onclick=playerTake;
     return;
-
   }
 
-
-  /*
-    CPU забирает.
-  */
-
   if(
-    attacker==="player"
-    &&
+    attacker==="player" &&
     defenderTaking
   ){
-
-    button.textContent=
-      "Закончить";
-
-    button.className="";
-
-    button.onclick=
-      finishTake;
-
+    b.textContent="Закончить";
+    b.className="";
+    b.onclick=finishTake;
     return;
-
   }
-
-
-  /*
-    CPU всё отбил.
-  */
 
   if(
-    attacker==="player"
-    &&
-    table.length
-    &&
+    attacker==="player" &&
+    table.length &&
     !unresolved()
   ){
-
-    button.textContent=
-      "Бито";
-
-    button.className="";
-
-    button.onclick=
-      successfulDefense;
-
+    b.textContent="Бито";
+    b.className="";
+    b.onclick=successfulDefense;
   }
-
 }
-
 
 function render(){
-
   renderCPU();
-
   renderPlayer();
-
   renderTable();
-
   renderDeck();
-
   renderDiscard();
-
   renderAction();
-
   renderStatus();
-
 }
 
 
-/* ANIMATIONS */
+/* ПОЛЁТ КАРТ */
 
-function makeGhost(
-  element
-){
-
-  const rect=
-    element.getBoundingClientRect();
-
+function makeGhost(el){
+  const r=
+    el.getBoundingClientRect();
 
   const clone=
-    element.cloneNode(
-      true
-    );
-
+    el.cloneNode(true);
 
   clone.classList.add(
     "flying-card"
   );
 
-
   Object.assign(
     clone.style,
     {
-
-      left:
-        rect.left+"px",
-
-      top:
-        rect.top+"px",
-
-      width:
-        rect.width+"px",
-
-      height:
-        rect.height+"px",
-
-      transform:
-        "none"
-
+      left:r.left+"px",
+      top:r.top+"px",
+      width:r.width+"px",
+      height:r.height+"px",
+      transform:"none"
     }
   );
 
-
-  document.body
-    .appendChild(
-      clone
-    );
-
+  document.body.appendChild(clone);
 
   return {
-
     clone,
-
-    rect
-
+    rect:r
   };
-
 }
 
-
 async function arcFlight(
-  element,
+  el,
   target,
-  options={}
+  {
+    duration=520,
+    lift=70,
+    rotate=5,
+    scale=.98,
+    fade=false
+  }={}
 ){
-
-  if(
-    !element
-    ||
-    !target
-  ){
-
+  if(!el||!target)
     return;
-
-  }
-
-
-  const duration=
-    options.duration ?? 520;
-
-
-  const lift=
-    options.lift ?? 70;
-
-
-  const rotate=
-    options.rotate ?? 5;
-
-
-  const scale=
-    options.scale ?? .98;
-
-
-  const fade=
-    options.fade ?? false;
-
 
   const {
     clone,
     rect:from
   }=
-    makeGhost(
-      element
-    );
-
+    makeGhost(el);
 
   const to=
     target.getBoundingClientRect();
 
-
   const dx=
-
-    to.left
-    +
-    to.width/2
-    -
-    from.width/2
-    -
+    to.left+
+    to.width/2-
+    from.width/2-
     from.left;
 
-
   const dy=
-
-    to.top
-    +
-    to.height/2
-    -
-    from.height/2
-    -
+    to.top+
+    to.height/2-
+    from.height/2-
     from.top;
 
-
-  const animation=
-
+  const anim=
     clone.animate(
       [
-
         {
           transform:
             "translate(0,0) rotate(0) scale(1)",
-
           opacity:1
         },
-
         {
           transform:
             `translate(
@@ -2423,12 +735,9 @@ async function arcFlight(
             )
             rotate(${rotate*.45}deg)
             scale(1.02)`,
-
           opacity:1,
-
           offset:.5
         },
-
         {
           transform:
             `translate(
@@ -2437,1971 +746,1069 @@ async function arcFlight(
             )
             rotate(${rotate}deg)
             scale(${scale})`,
-
           opacity:
-            fade
-              ?.15
-              :1
+            fade?.15:1
         }
-
       ],
-
       {
-
         duration,
-
         easing:
           "cubic-bezier(.22,.78,.22,1)",
-
-        fill:
-          "forwards"
-
+        fill:"forwards"
       }
     );
 
-
   try{
-
-    await animation.finished;
-
-  }
-
-  catch(error){}
-
+    await anim.finished;
+  }catch(e){}
 
   clone.remove();
-
 }
-
 
 async function cascadeTableTo(
   target,
   mode="take"
 ){
-
-  const cards=
-
-    [
-      ...
-      document.querySelectorAll(
-        "#table .card"
-      )
-    ];
-
-
-  const animations=
-
-    cards.map(
-      (
-        card,
-        index
-      )=>
-
-        new Promise(
-          resolve=>{
-
-            setTimeout(
-              async()=>{
-
-                await arcFlight(
-                  card,
-                  target,
-                  {
-
-                    duration:500,
-
-                    lift:
-                      mode==="discard"
-                        ?45
-                        :65,
-
-                    rotate:
-
-                      (
-                        index%2
-                          ?1
-                          :-1
-                      )
-
-                      *
-
-                      (
-                        mode==="discard"
-                          ?10
-                          :6
-                      ),
-
-                    scale:
-                      mode==="discard"
-                        ?.72
-                        :.82,
-
-                    fade:
-                      mode==="discard"
-
-                  }
-                );
-
-
-                resolve();
-
-              },
-
-              index*70
-            );
-
-          }
-        )
-
-    );
-
+  const cards=[
+    ...document.querySelectorAll(
+      "#table .card"
+    )
+  ];
 
   await Promise.all(
-    animations
-  );
+    cards.map(
+      (card,i)=>
+        new Promise(resolve=>{
+          setTimeout(
+            async()=>{
+              await arcFlight(
+                card,
+                target,
+                {
+                  duration:500,
+                  lift:
+                    mode==="discard"
+                      ?45
+                      :65,
+                  rotate:
+                    (i%2?1:-1)*
+                    (
+                      mode==="discard"
+                        ?10
+                        :6
+                    ),
+                  scale:
+                    mode==="discard"
+                      ?.72
+                      :.82,
+                  fade:
+                    mode==="discard"
+                }
+              );
 
+              resolve();
+            },
+            i*70
+          );
+        })
+    )
+  );
 }
 
 
-/* DRAW */
+/* ДОБОР */
 
 function drawToSix(hand){
-
   const before=
     hand.length;
 
-
   while(
-    hand.length<6
-    &&
+    hand.length<6 &&
     deck.length
   ){
-
     hand.push(
       deck.shift()
     );
-
   }
 
-
-  return (
-    hand.length
-    -
-    before
-  );
-
+  return hand.length-before;
 }
-
 
 async function animateDraw(
   targetId,
   count
 ){
-
-  if(!count){
-
+  if(!count)
     return;
-
-  }
-
 
   const target=
     $(targetId);
 
-
-  for(
-    let i=0;
-    i<count;
-    i++
-  ){
-
+  for(let i=0;i<count;i++){
     const source=
-
       $("deckCard")
-        .querySelector(
-          ".card"
-        )
-
+        .querySelector(".card")
       ||
-
       $("deckTrump")
-        .querySelector(
-          ".card"
-        );
-
+        .querySelector(".card");
 
     if(source){
-
       arcFlight(
         source,
         target,
         {
-
           duration:480,
-
           lift:55,
-
-          rotate:
-
-            (
-              i%2
-                ?1
-                :-1
-            )
-            *
-            4,
-
+          rotate:(i%2?1:-1)*4,
           scale:.82
-
         }
       );
-
     }
 
+    sound("play");
 
-    sound(
-      "play"
-    );
-
-
-    await sleep(
-      95
-    );
-
+    await sleep(95);
   }
 
-
-  await sleep(
-    240
-  );
-
+  await sleep(220);
 }
-
-
-/*
-  Очень важное исправление.
-
-  Добирает сначала тот,
-  кто АТАКОВАЛ в этом кону.
-
-  Только после добора
-  меняется атакующий.
-*/
 
 async function refillInOrder(
   firstSide,
   secondSide
 ){
-
   const first=
-
     firstSide==="player"
-
-      ?
-
-        player
-
-      :
-
-        cpu;
-
+      ?player
+      :cpu;
 
   const second=
-
     secondSide==="player"
+      ?player
+      :cpu;
 
-      ?
+  const c1=
+    drawToSix(first);
 
-        player
-
-      :
-
-        cpu;
-
-
-  const firstCount=
-    drawToSix(
-      first
-    );
-
-
-  const secondCount=
-    drawToSix(
-      second
-    );
-
+  const c2=
+    drawToSix(second);
 
   render();
 
-
   await animateDraw(
-
     firstSide==="player"
-
-      ?
-
-        "playerHand"
-
-      :
-
-        "cpuHand",
-
-    firstCount
-
+      ?"playerHand"
+      :"cpuHand",
+    c1
   );
-
 
   await animateDraw(
-
     secondSide==="player"
-
-      ?
-
-        "playerHand"
-
-      :
-
-        "cpuHand",
-
-    secondCount
-
+      ?"playerHand"
+      :"cpuHand",
+    c2
   );
 
-
   render();
-
 }
 
 
-/* START */
+/* СТАРТОВАЯ РАЗДАЧА */
 
 function lowestTrump(hand){
-
   return hand
-
-    .filter(
-      card=>
-        card.suit===trump
-    )
-
+    .filter(c=>c.suit===trump)
     .sort(
-      (a,b)=>
-        value(a)
-        -
-        value(b)
+      (a,b)=>value(a)-value(b)
     )[0];
-
 }
 
+async function initialDeal(){
+  player=[];
+  cpu=[];
+  table=[];
+  discardCount=0;
 
-function startGame(){
+  render();
 
+  locked=true;
+
+  for(let i=0;i<6;i++){
+    for(const side of [
+      "player",
+      "cpu"
+    ]){
+      if(!deck.length)
+        break;
+
+      const source=
+        $("deckCard")
+          .querySelector(".card")
+        ||
+        $("deckTrump")
+          .querySelector(".card");
+
+      const target=
+        $(
+          side==="player"
+            ?"playerHand"
+            :"cpuHand"
+        );
+
+      const card=
+        deck.shift();
+
+      if(source){
+        await arcFlight(
+          source,
+          target,
+          {
+            duration:420,
+            lift:48,
+            rotate:(i%2?1:-1)*3,
+            scale:.82
+          }
+        );
+      }
+
+      (
+        side==="player"
+          ?player
+          :cpu
+      ).push(card);
+
+      sound("play");
+
+      render();
+
+      await sleep(60);
+    }
+  }
+
+  locked=false;
+
+  render();
+}
+
+async function startGame(){
   deck=
     shuffle(
       createDeck()
     );
 
-
   bottomTrump=
-
     deck[
       deck.length-1
     ];
 
-
   trump=
     bottomTrump.suit;
 
-
-  player=[];
-
-  cpu=[];
-
-  table=[];
-
-
-  discardCount=0;
-
-
-  defenderTaking=
-    false;
-
-
-  gameOver=
-    false;
-
-
-  locked=
-    false;
-
-
-  for(
-    let i=0;
-    i<6;
-    i++
-  ){
-
-    player.push(
-      deck.shift()
-    );
-
-
-    cpu.push(
-      deck.shift()
-    );
-
-  }
-
-
-  const playerTrump=
-    lowestTrump(
-      player
-    );
-
-
-  const cpuTrump=
-    lowestTrump(
-      cpu
-    );
-
-
-  if(
-    playerTrump
-    &&
-    cpuTrump
-  ){
-
-    attacker=
-
-      value(playerTrump)
-      <=
-      value(cpuTrump)
-
-        ?
-
-          "player"
-
-        :
-
-          "cpu";
-
-  }
-
-  else if(
-    playerTrump
-  ){
-
-    attacker=
-      "player";
-
-  }
-
-  else if(
-    cpuTrump
-  ){
-
-    attacker=
-      "cpu";
-
-  }
-
-  else{
-
-    attacker=
-
-      Math.random()<.5
-
-        ?
-
-          "player"
-
-        :
-
-          "cpu";
-
-  }
-
-
-  defender=
-
-    attacker==="player"
-
-      ?
-
-        "cpu"
-
-      :
-
-        "player";
-
-
-  defenderStartCards=
-
-    (
-      defender==="player"
-
-        ?
-
-          player
-
-        :
-
-          cpu
-    )
-    .length;
-
+  defenderTaking=false;
+  gameOver=false;
+  locked=true;
 
   $("startScreen")
     .classList
-    .add(
-      "hidden"
-    );
-
+    .add("hidden");
 
   $("resultOverlay")
     .classList
-    .add(
-      "hidden"
-    );
-
+    .add("hidden");
 
   render();
 
+  await initialDeal();
 
-  if(
-    attacker==="cpu"
-  ){
+  const pt=
+    lowestTrump(player);
 
-    setTimeout(
-      cpuAttack,
-      600
-    );
+  const ct=
+    lowestTrump(cpu);
 
+  if(pt&&ct){
+    attacker=
+      value(pt)<=value(ct)
+        ?"player"
+        :"cpu";
+  }
+  else if(pt){
+    attacker="player";
+  }
+  else if(ct){
+    attacker="cpu";
+  }
+  else{
+    attacker=
+      Math.random()<.5
+        ?"player"
+        :"cpu";
   }
 
+  defender=
+    attacker==="player"
+      ?"cpu"
+      :"player";
+
+  defenderStartCards=
+    (
+      defender==="player"
+        ?player
+        :cpu
+    ).length;
+
+  locked=false;
+
+  render();
+
+  if(attacker==="cpu"){
+    setTimeout(
+      cpuAttack,
+      550
+    );
+  }
 }
 
 
-/* =========================
-   AI
-========================= */
+/* ИИ */
 
 function rankMultiplicity(
   hand,
   rank
 ){
-
   return hand.filter(
-    card=>
-      card.rank===rank
+    c=>c.rank===rank
   ).length;
-
 }
 
-
-/*
-  ИИ теперь ценит пары.
-
-  Например:
-  6♣ + 6♦ выгоднее,
-  чем случайная одиночная 7.
-*/
-
 function attackScore(card){
-
   const trumpPenalty=
-
     card.suit===trump
-
       ?22
-
       :0;
 
-
   const pairBonus=
-
     (
       rankMultiplicity(
         cpu,
         card.rank
-      )
-      -
-      1
-    )
-
-    *
-    -4;
-
-
-  const pressureBonus=
-
-    player.length<=3
-
-      ?-2
-
-      :0;
-
+      )-1
+    )*-4;
 
   return (
-
-    value(card)
-    *
-    2
-
-    +
-
-    trumpPenalty
-
-    +
-
-    pairBonus
-
-    +
-
-    pressureBonus
-
+    value(card)*2+
+    trumpPenalty+
+    pairBonus+
+    (
+      player.length<=3
+        ?-2
+        :0
+    )
   );
-
 }
-
 
 function defenseScore(
   card,
   attackCard
 ){
-
-  let score=
-
-    value(card)
-    *
-    2;
-
-
-  /*
-    Козырную защиту
-    считаем дорогой.
-  */
+  let s=
+    value(card)*2;
 
   if(
-    card.suit===trump
-    &&
+    card.suit===trump &&
     attackCard.suit!==trump
   ){
-
-    score+=18;
-
+    s+=18;
   }
-
-
-  /*
-    Немного бережём пары.
-  */
 
   if(
     rankMultiplicity(
       cpu,
       card.rank
-    )
-    >
-    1
+    )>1
   ){
-
-    score+=2;
-
+    s+=2;
   }
 
-
-  return score;
-
+  return s;
 }
 
-
-function chooseAttack(options){
-
-  return [
-    ...options
-  ].sort(
-    (a,b)=>
-      attackScore(a)
-      -
-      attackScore(b)
-  )[0];
-
+function chooseAttack(opts){
+  return [...opts]
+    .sort(
+      (a,b)=>
+        attackScore(a)-
+        attackScore(b)
+    )[0];
 }
-
 
 function chooseDefense(
-  options,
+  opts,
   attackCard
 ){
-
-  return [
-    ...options
-  ].sort(
-    (a,b)=>
-
-      defenseScore(
-        a,
-        attackCard
-      )
-
-      -
-
-      defenseScore(
-        b,
-        attackCard
-      )
-  )[0];
-
+  return [...opts]
+    .sort(
+      (a,b)=>
+        defenseScore(
+          a,
+          attackCard
+        )
+        -
+        defenseScore(
+          b,
+          attackCard
+        )
+    )[0];
 }
-
 
 function cpuShouldTake(
   attackCard
 ){
-
-  const options=
-
+  const opts=
     cpu.filter(
-      card=>
-        beats(
-          card,
-          attackCard
-        )
+      c=>beats(
+        c,
+        attackCard
+      )
     );
 
-
-  if(
-    !options.length
-  ){
-
+  if(!opts.length)
     return true;
 
-  }
-
-
-  /*
-    Когда колоды уже нет
-    и CPU почти вышел,
-    он старается отбиваться.
-  */
-
   if(
-    deck.length===0
-    &&
+    deck.length===0 &&
     cpu.length<=3
   ){
-
     return false;
-
   }
 
-
-  const defense=
-
+  const d=
     chooseDefense(
-      options,
+      opts,
       attackCard
     );
 
-
-  const costsTrump=
-
-    defense.suit===trump
-
-    &&
-
-    attackCard.suit!==trump;
-
-
-  const veryExpensive=
-
-    costsTrump
-
-    &&
-
-    value(defense)
-    >=
-    ranks.indexOf(
-      "Q"
-    );
-
-
   return (
-
-    veryExpensive
-
-    &&
-
-    value(attackCard)
-    <=
-    ranks.indexOf(
-      "9"
-    )
-
-    &&
-
-    table.length>=2
-
-    &&
-
+    d.suit===trump &&
+    attackCard.suit!==trump &&
+    value(d)>=
+      ranks.indexOf("Q") &&
+    value(attackCard)<=
+      ranks.indexOf("9") &&
+    table.length>=2 &&
     cpu.length>3
-
   );
-
 }
 
-
 function cpuShouldContinue(){
-
   if(
     table.length>=
       maxAttacks()
   ){
-
     return false;
-
   }
 
+  const opts=
+    cpu.filter(canAttack);
 
-  const options=
-
-    cpu.filter(
-      canAttack
-    );
-
-
-  if(
-    !options.length
-  ){
-
+  if(!opts.length)
     return false;
 
-  }
-
-
-  /*
-    Давим сильнее,
-    если у игрока
-    мало карт.
-  */
-
-  if(
-    player.length<=2
-  ){
-
+  if(player.length<=2)
     return true;
 
-  }
-
-
   const nonTrump=
-
-    options.filter(
-      card=>
-        card.suit!==trump
+    opts.filter(
+      c=>c.suit!==trump
     );
 
-
-  if(
-    nonTrump.length
-  ){
-
-    return (
-      table.length<4
-    );
-
-  }
-
-
-  /*
-    Не раскидываем
-    козыри без причины.
-  */
+  if(nonTrump.length)
+    return table.length<4;
 
   return (
-
-    table.length<2
-
-    &&
-
+    table.length<2 &&
     deck.length===0
-
   );
-
 }
 
 
-/* PLAYER MOVE */
+/* ХОД ИГРОКА */
 
 async function playerCardClick(
   id,
   element
 ){
-
   const card=
-
     player.find(
-      card=>
-        card.id===id
+      c=>c.id===id
     );
 
-
   if(
-    !card
-    ||
-    !canPlayerPlay(
-      card
-    )
+    !card ||
+    !canPlayerPlay(card)
   ){
-
     return;
-
   }
 
-
-  locked=
-    true;
-
+  locked=true;
 
   renderAction();
-
 
   await arcFlight(
     element,
     $("table"),
     {
-
       duration:500,
-
       lift:65,
-
       rotate:4
-
     }
   );
 
+  sound("play");
 
-  sound(
-    "play"
-  );
-
-
-  /*
-    Игрок атакует.
-  */
-
-  if(
-    attacker==="player"
-  ){
-
+  if(attacker==="player"){
     table.push({
-
       attack:
-
         removeCard(
           player,
           id
         ),
-
       defense:null
-
     });
-
 
     render();
 
-
-    if(
-      !defenderTaking
-    ){
-
+    if(!defenderTaking){
       setTimeout(
         cpuDefend,
         240
       );
-
     }
-
     else{
-
-      locked=
-        false;
-
-
+      locked=false;
       render();
-
     }
-
 
     return;
-
   }
 
-
-  /*
-    Игрок защищается.
-  */
-
   const pair=
-
     table.find(
-      pair=>
-        !pair.defense
+      p=>!p.defense
     );
 
-
   if(
-    !pair
-    ||
+    !pair ||
     !beats(
       card,
       pair.attack
     )
   ){
-
-    locked=
-      false;
-
-
+    locked=false;
     render();
-
-
     return;
-
   }
 
-
   pair.defense=
-
     removeCard(
       player,
       id
     );
 
-
-  sound(
-    "beat"
-  );
-
+  sound("beat");
 
   render();
-
 
   setTimeout(
     cpuContinueAttack,
     260
   );
-
 }
 
 
-/* CPU DEFENSE */
+/* ЗАЩИТА ИИ */
 
 async function cpuDefend(){
-
   if(
-    defender!=="cpu"
-    ||
+    defender!=="cpu" ||
     defenderTaking
   ){
-
     return;
-
   }
-
 
   const pair=
-
     table.find(
-      pair=>
-        !pair.defense
+      p=>!p.defense
     );
 
-
-  if(!pair){
-
+  if(!pair)
     return;
-
-  }
-
 
   if(
     cpuShouldTake(
       pair.attack
     )
   ){
-
-    defenderTaking=
-      true;
-
-
-    locked=
-      false;
-
-
+    defenderTaking=true;
+    locked=false;
     render();
-
-
     return;
-
   }
 
-
-  const options=
-
+  const opts=
     cpu.filter(
-      card=>
-        beats(
-          card,
-          pair.attack
-        )
+      c=>beats(
+        c,
+        pair.attack
+      )
     );
 
-
-  if(
-    !options.length
-  ){
-
-    defenderTaking=
-      true;
-
-
-    locked=
-      false;
-
-
+  if(!opts.length){
+    defenderTaking=true;
+    locked=false;
     render();
-
-
     return;
-
   }
 
-
   const defense=
-
     chooseDefense(
-      options,
+      opts,
       pair.attack
     );
 
-
   const source=
-
     $("cpuHand")
       .querySelector(
         `[data-id="${defense.id}"]`
       );
 
-
   await arcFlight(
     source,
     $("table"),
     {
-
       duration:500,
-
       lift:80,
-
       rotate:-4
-
     }
   );
 
-
   pair.defense=
-
     removeCard(
       cpu,
       defense.id
     );
 
+  sound("beat");
 
-  sound(
-    "beat"
-  );
-
-
-  locked=
-    false;
-
+  locked=false;
 
   render();
-
 }
 
 
-/* CPU ATTACK */
+/* АТАКА ИИ */
 
 async function cpuAttack(){
-
   if(
-    attacker!=="cpu"
-    ||
+    attacker!=="cpu" ||
     gameOver
   ){
-
     return;
-
   }
 
+  const opts=
+    cpu.filter(canAttack);
 
-  const options=
-
-    cpu.filter(
-      canAttack
-    );
-
-
-  if(
-    !options.length
-  ){
-
-    if(
-      table.length
-    ){
-
+  if(!opts.length){
+    if(table.length)
       successfulDefense();
 
-    }
-
-
     return;
-
   }
 
-
-  locked=
-    true;
-
+  locked=true;
 
   renderAction();
 
-
   const attack=
-
-    chooseAttack(
-      options
-    );
-
+    chooseAttack(opts);
 
   const source=
-
     $("cpuHand")
       .querySelector(
         `[data-id="${attack.id}"]`
       );
 
-
   await arcFlight(
     source,
     $("table"),
     {
-
       duration:510,
-
       lift:88,
-
       rotate:-4
-
     }
   );
 
-
   table.push({
-
     attack:
-
       removeCard(
         cpu,
         attack.id
       ),
-
     defense:null
-
   });
 
+  sound("play");
 
-  sound(
-    "play"
-  );
-
-
-  locked=
-    false;
-
+  locked=false;
 
   render();
-
 }
 
-
-/* CPU CONTINUE */
-
 async function cpuContinueAttack(){
-
   if(
-    attacker!=="cpu"
-    ||
+    attacker!=="cpu" ||
     gameOver
   ){
-
     return;
-
   }
 
+  if(defenderTaking){
+    const opts=
+      cpu.filter(canAttack);
 
-  /*
-    Игрок уже забирает.
-  */
-
-  if(
-    defenderTaking
-  ){
-
-    const options=
-
-      cpu.filter(
-        canAttack
-      );
-
-
-    if(
-      options.length
-    ){
-
-      locked=
-        true;
-
+    if(opts.length){
+      locked=true;
 
       renderAction();
 
-
       const attack=
-
-        chooseAttack(
-          options
-        );
-
+        chooseAttack(opts);
 
       const source=
-
         $("cpuHand")
           .querySelector(
             `[data-id="${attack.id}"]`
           );
 
-
       await arcFlight(
         source,
         $("table"),
         {
-
           duration:480,
-
           lift:70,
-
           rotate:-4
-
         }
       );
 
-
       table.push({
-
         attack:
-
           removeCard(
             cpu,
             attack.id
           ),
-
         defense:null
-
       });
 
+      sound("play");
 
-      sound(
-        "play"
-      );
-
-
-      locked=
-        false;
-
+      locked=false;
 
       render();
-
 
       setTimeout(
         cpuContinueAttack,
         180
       );
-
     }
-
     else{
-
       finishTake();
-
     }
-
 
     return;
-
   }
 
-
-  /*
-    Решаем,
-    подкидывать ли ещё.
-  */
-
-  if(
-    cpuShouldContinue()
-  ){
-
+  if(cpuShouldContinue()){
     const attack=
-
       chooseAttack(
-
         cpu.filter(
           canAttack
         )
-
       );
 
-
     const source=
-
       $("cpuHand")
         .querySelector(
           `[data-id="${attack.id}"]`
         );
 
-
-    locked=
-      true;
-
+    locked=true;
 
     renderAction();
-
 
     await arcFlight(
       source,
       $("table"),
       {
-
         duration:480,
-
         lift:70,
-
         rotate:-4
-
       }
     );
 
-
     table.push({
-
       attack:
-
         removeCard(
           cpu,
           attack.id
         ),
-
       defense:null
-
     });
 
+    sound("play");
 
-    sound(
-      "play"
-    );
-
-
-    locked=
-      false;
-
+    locked=false;
 
     render();
-
   }
-
   else{
-
     successfulDefense();
-
   }
-
 }
 
 
-/* TAKE */
+/* ЗАБРАТЬ */
 
 function playerTake(){
-
   if(
-    defender!=="player"
-    ||
+    defender!=="player" ||
     locked
   ){
-
     return;
-
   }
 
+  defenderTaking=true;
+  locked=true;
 
-  defenderTaking=
-    true;
-
-
-  locked=
-    true;
-
-
-  sound(
-    "take"
-  );
-
+  sound("take");
 
   render();
 
-
   setTimeout(
     ()=>{
-
-      locked=
-        false;
-
-
+      locked=false;
       cpuContinueAttack();
-
     },
-
     260
   );
-
 }
-
 
 function collectTable(hand){
+  for(const p of table){
+    hand.push(p.attack);
 
-  for(
-    const pair
-    of table
-  ){
-
-    hand.push(
-      pair.attack
-    );
-
-
-    if(
-      pair.defense
-    ){
-
-      hand.push(
-        pair.defense
-      );
-
-    }
-
+    if(p.defense)
+      hand.push(p.defense);
   }
-
 
   table=[];
-
 }
 
-
-/*
-  После Забрать
-  атакующий НЕ меняется.
-*/
-
 async function finishTake(){
-
   if(
-    gameOver
-    ||
+    gameOver ||
     !table.length
   ){
-
     return;
-
   }
 
-
-  locked=
-    true;
-
+  locked=true;
 
   renderAction();
-
 
   const oldAttacker=
     attacker;
 
-
   const oldDefender=
     defender;
 
-
   const target=
-
     oldDefender==="player"
-
-      ?
-
-        $("playerHand")
-
-      :
-
-        $("cpuHand");
-
+      ?$("playerHand")
+      :$("cpuHand");
 
   await cascadeTableTo(
     target,
     "take"
   );
 
-
   collectTable(
-
     oldDefender==="player"
-
-      ?
-
-        player
-
-      :
-
-        cpu
-
+      ?player
+      :cpu
   );
 
-
-  defenderTaking=
-    false;
-
-
-  /*
-    Добор:
-    атакующий → защитник.
-  */
+  defenderTaking=false;
 
   await refillInOrder(
     oldAttacker,
     oldDefender
   );
 
-
-  /*
-    Тот же защитник
-    снова защищается.
-  */
-
   defenderStartCards=
-
     (
       oldDefender==="player"
+        ?player
+        :cpu
+    ).length;
 
-        ?
-
-          player
-
-        :
-
-          cpu
-    )
-    .length;
-
-
-  locked=
-    false;
-
+  locked=false;
 
   checkGameEnd();
 
-
   render();
 
-
   if(
-    !gameOver
-    &&
+    !gameOver &&
     attacker==="cpu"
   ){
-
     setTimeout(
       cpuAttack,
       360
     );
-
   }
-
 }
 
 
-/* SUCCESSFUL DEFENSE */
+/* БИТО */
 
 async function successfulDefense(){
-
   if(
-    !table.length
-    ||
-    gameOver
-    ||
+    !table.length ||
+    gameOver ||
     unresolved()
   ){
-
     return;
-
   }
 
-
-  locked=
-    true;
-
+  locked=true;
 
   renderAction();
-
 
   const oldAttacker=
     attacker;
 
-
   const oldDefender=
     defender;
 
-
   const discarded=
-
     table.reduce(
-      (
-        total,
-        pair
-      )=>
-
-        total
-        +
-        1
-        +
-        (
-          pair.defense
-            ?1
-            :0
-        ),
-
+      (n,p)=>
+        n+
+        1+
+        (p.defense?1:0),
       0
     );
-
 
   await cascadeTableTo(
     $("discard"),
     "discard"
   );
 
-
   discardCount+=
     discarded;
 
-
   table=[];
-
-
-  /*
-    ВАЖНО:
-    сначала добор
-    в старом порядке.
-  */
 
   await refillInOrder(
     oldAttacker,
     oldDefender
   );
 
-
-  /*
-    И только теперь
-    отбившийся становится
-    новым атакующим.
-  */
-
   attacker=
     oldDefender;
-
 
   defender=
     oldAttacker;
 
-
-  defenderTaking=
-    false;
-
+  defenderTaking=false;
 
   defenderStartCards=
-
     (
       defender==="player"
+        ?player
+        :cpu
+    ).length;
 
-        ?
-
-          player
-
-        :
-
-          cpu
-    )
-    .length;
-
-
-  locked=
-    false;
-
+  locked=false;
 
   checkGameEnd();
 
-
   render();
 
-
   if(
-    !gameOver
-    &&
+    !gameOver &&
     attacker==="cpu"
   ){
-
     setTimeout(
       cpuAttack,
       360
     );
-
   }
-
 }
 
 
-/* END GAME */
+/* КОНЕЦ */
 
 function checkGameEnd(){
-
-  /*
-    Пока карты лежат
-    на столе,
-    партия не заканчивается.
-  */
-
   if(
-    deck.length
-    ||
+    deck.length ||
     table.length
   ){
-
     return;
-
   }
 
-
   if(
-    player.length===0
-    ||
+    player.length===0 ||
     cpu.length===0
   ){
-
-    gameOver=
-      true;
-
-
-    locked=
-      true;
-
+    gameOver=true;
+    locked=true;
 
     render();
-
 
     setTimeout(
       showResult,
       220
     );
-
   }
-
 }
 
-
 function showResult(){
-
   if(
-    player.length===0
-    &&
+    player.length===0 &&
     cpu.length===0
   ){
-
-    $("resultIcon")
-      .textContent=
-        "🤝";
-
-
-    $("resultTitle")
-      .textContent=
-        "Ничья";
-
-
-    $("resultText")
-      .textContent=
-        "Карты закончились одновременно.";
-
+    $("resultIcon").textContent="🤝";
+    $("resultTitle").textContent="Ничья";
+    $("resultText").textContent="Карты закончились одновременно.";
   }
-
   else if(
     player.length===0
   ){
-
-    $("resultIcon")
-      .textContent=
-        "🏆";
-
-
-    $("resultTitle")
-      .textContent=
-        "Ты выиграл";
-
-
-    $("resultText")
-      .textContent=
-        "У тебя не осталось карт.";
-
+    $("resultIcon").textContent="🏆";
+    $("resultTitle").textContent="Ты выиграл";
+    $("resultText").textContent="У тебя не осталось карт.";
   }
-
   else{
-
-    $("resultIcon")
-      .textContent=
-        "🃏";
-
-
-    $("resultTitle")
-      .textContent=
-        "Ты дурак";
-
-
-    $("resultText")
-      .textContent=
-        "Компьютер избавился от карт раньше.";
-
+    $("resultIcon").textContent="🃏";
+    $("resultTitle").textContent="Ты дурак";
+    $("resultText").textContent="Компьютер избавился от карт раньше.";
   }
-
 
   $("resultOverlay")
     .classList
-    .remove(
-      "hidden"
-    );
-
+    .remove("hidden");
 }
 
 
@@ -4410,47 +1817,33 @@ function showResult(){
 $("playerHand")
   .addEventListener(
     "click",
-    event=>{
-
-      const element=
-
-        event.target.closest(
+    e=>{
+      const el=
+        e.target.closest(
           ".card[data-id]"
         );
 
-
-      if(element){
-
+      if(el){
         playerCardClick(
-          element.dataset.id,
-          element
+          el.dataset.id,
+          el
         );
-
       }
-
     }
   );
 
+$("startButton").onclick=
+  startGame;
 
-$("startButton")
-  .onclick=
-    startGame;
-
-
-$("againButton")
-  .onclick=
-    startGame;
-
+$("againButton").onclick=
+  startGame;
 
 window.addEventListener(
   "resize",
   render
 );
 
-
 render();
-
 </script>
-
 </body>
 </html>
