@@ -1,1 +1,1041 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Дурак</title>
 
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#071811;
+  color:white;
+  overflow:hidden;
+}
+
+.game{
+  width:100vw;
+  height:100vh;
+  min-height:650px;
+  position:relative;
+  background:
+    radial-gradient(circle at 50% 45%,#17603f 0,#0d422d 38%,#08271c 70%,#051b13 100%);
+}
+
+.header{
+  position:absolute;
+  top:20px;
+  left:25px;
+  right:25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+}
+
+.logo{
+  font-size:27px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+.logo small{
+  display:block;
+  font-size:9px;
+  letter-spacing:4px;
+  color:#e4c875;
+  margin-top:3px;
+}
+
+.status{
+  background:#071d15aa;
+  border:1px solid #ffffff15;
+  padding:12px 18px;
+  border-radius:30px;
+  font-size:13px;
+}
+
+.hand{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  justify-content:center;
+}
+
+.cpu{
+  top:75px;
+}
+
+.player{
+  bottom:25px;
+}
+
+.card{
+  width:82px;
+  height:116px;
+  background:#f6f2e9;
+  color:#171717;
+  border-radius:10px;
+  border:1px solid #c9c3b8;
+  box-shadow:0 8px 20px #0008;
+  position:relative;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:32px;
+  font-weight:bold;
+  margin-left:-22px;
+  user-select:none;
+}
+
+.card:first-child{
+  margin-left:0;
+}
+
+.card.red{
+  color:#c92332;
+}
+
+.corner{
+  position:absolute;
+  left:8px;
+  top:7px;
+  font-size:17px;
+  line-height:16px;
+  text-align:center;
+}
+
+.corner span{
+  display:block;
+  font-size:16px;
+}
+
+.back{
+  background:
+    repeating-linear-gradient(
+      45deg,
+      #173c67 0 5px,
+      #eee7db 5px 8px,
+      #922a34 8px 13px,
+      #eee7db 13px 16px
+    );
+  border:5px solid #eee9df;
+}
+
+.player .playable{
+  cursor:pointer;
+  transition:.15s;
+}
+
+.player .playable:hover{
+  transform:translateY(-16px);
+}
+
+.player .disabled{
+  opacity:.48;
+  filter:brightness(.8);
+}
+
+.table{
+  position:absolute;
+  left:50%;
+  top:47%;
+  transform:translate(-50%,-50%);
+  width:min(760px,70vw);
+  min-height:300px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:15px;
+}
+
+.pair{
+  width:115px;
+  height:150px;
+  position:relative;
+}
+
+.pair .card{
+  position:absolute;
+  margin:0;
+  left:0;
+  top:0;
+}
+
+.pair .defense{
+  left:30px;
+  top:28px;
+  transform:rotate(9deg);
+}
+
+.deck{
+  position:absolute;
+  left:6%;
+  top:47%;
+  transform:translateY(-50%);
+  width:150px;
+  height:150px;
+}
+
+.deck .back{
+  position:absolute;
+  margin:0;
+  left:0;
+  top:10px;
+}
+
+.trump-card{
+  position:absolute;
+  left:38px;
+  top:12px;
+  transform:rotate(90deg);
+  z-index:-1;
+}
+
+.deck-count{
+  position:absolute;
+  top:133px;
+  left:5px;
+  font-size:11px;
+  color:#bbb;
+}
+
+.trump-symbol{
+  position:absolute;
+  left:100px;
+  top:50px;
+  font-size:30px;
+}
+
+.action{
+  position:absolute;
+  right:6%;
+  top:48%;
+}
+
+button{
+  border:1px solid #ffffff25;
+  background:#e9e8e2;
+  color:#17251f;
+  border-radius:10px;
+  padding:12px 20px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button:hover{
+  filter:brightness(1.08);
+}
+
+button.danger{
+  background:#8d3038;
+  color:white;
+}
+
+.hidden{
+  display:none!important;
+}
+
+.start{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:
+    radial-gradient(circle at center,#123d2b,#061a12);
+}
+
+.menu{
+  width:380px;
+  padding:35px;
+  border-radius:22px;
+  background:#0c271c;
+  border:1px solid #ffffff18;
+  box-shadow:0 30px 80px #0008;
+}
+
+.menu h1{
+  font-size:45px;
+  margin:0;
+}
+
+.menu p{
+  color:#aebcb5;
+  margin:7px 0 28px;
+}
+
+.menu button{
+  width:100%;
+  padding:15px;
+  background:#e8cb78;
+}
+
+@media(max-width:800px){
+  .card{
+    width:65px;
+    height:94px;
+    font-size:25px;
+    margin-left:-23px;
+  }
+
+  .corner{
+    font-size:14px;
+  }
+
+  .table{
+    width:58vw;
+  }
+
+  .deck{
+    left:2%;
+  }
+
+  .action{
+    right:2%;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="game">
+
+  <div class="header">
+    <div class="logo">
+      ДУРАК
+      <small>ПОДКИДНОЙ</small>
+    </div>
+
+    <div class="status" id="status">
+      Начинаем...
+    </div>
+  </div>
+
+  <div class="hand cpu" id="cpuHand"></div>
+
+  <div class="deck">
+    <div id="trumpCard"></div>
+    <div id="deckVisual"></div>
+    <div class="deck-count" id="deckCount"></div>
+    <div class="trump-symbol" id="trumpSymbol"></div>
+  </div>
+
+  <div class="table" id="table"></div>
+
+  <div class="action">
+    <button id="actionButton" class="hidden"></button>
+  </div>
+
+  <div class="hand player" id="playerHand"></div>
+
+</div>
+
+<div class="start" id="startScreen">
+  <div class="menu">
+    <h1>ДУРАК</h1>
+    <p>Классический подкидной. 36 карт.</p>
+    <button id="startButton">Начать игру</button>
+  </div>
+</div>
+
+<script>
+const suits=["♠","♥","♦","♣"];
+const ranks=["6","7","8","9","10","J","Q","K","A"];
+
+let deck=[];
+let player=[];
+let cpu=[];
+let table=[];
+
+let trump=null;
+
+let attacker="player";
+let defender="cpu";
+
+let defenderTaking=false;
+let defenderStartCards=6;
+let gameOver=false;
+
+const $=id=>document.getElementById(id);
+
+function isRed(suit){
+  return suit==="♥" || suit==="♦";
+}
+
+function value(card){
+  return ranks.indexOf(card.rank);
+}
+
+function createDeck(){
+  let result=[];
+  let id=0;
+
+  for(const suit of suits){
+    for(const rank of ranks){
+      result.push({
+        suit,
+        rank,
+        id:"card_"+id++
+      });
+    }
+  }
+
+  return result;
+}
+
+function shuffle(array){
+  for(let i=array.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [array[i],array[j]]=[array[j],array[i]];
+  }
+
+  return array;
+}
+
+function cardHTML(card,back=false,extra=""){
+  if(back){
+    return `<div class="card back ${extra}"></div>`;
+  }
+
+  return `
+    <div
+      class="card ${isRed(card.suit)?"red":""} ${extra}"
+      data-id="${card.id}"
+    >
+      <div class="corner">
+        ${card.rank}
+        <span>${card.suit}</span>
+      </div>
+
+      ${card.suit}
+    </div>
+  `;
+}
+
+function removeCard(hand,id){
+  const index=hand.findIndex(card=>card.id===id);
+
+  if(index===-1) return null;
+
+  return hand.splice(index,1)[0];
+}
+
+function beats(defense,attack){
+  if(
+    defense.suit===attack.suit &&
+    value(defense)>value(attack)
+  ){
+    return true;
+  }
+
+  if(
+    defense.suit===trump &&
+    attack.suit!==trump
+  ){
+    return true;
+  }
+
+  return false;
+}
+
+function tableRanks(){
+  const result=[];
+
+  for(const pair of table){
+    result.push(pair.attack.rank);
+
+    if(pair.defense){
+      result.push(pair.defense.rank);
+    }
+  }
+
+  return result;
+}
+
+function maxAttacks(){
+  return Math.min(6,defenderStartCards);
+}
+
+function canAttack(card){
+  if(table.length>=maxAttacks()){
+    return false;
+  }
+
+  if(table.length===0){
+    return true;
+  }
+
+  return tableRanks().includes(card.rank);
+}
+
+function canPlayerPlay(card){
+  if(gameOver) return false;
+
+  if(attacker==="player"){
+    return canAttack(card);
+  }
+
+  if(
+    defender==="player" &&
+    !defenderTaking
+  ){
+    const pair=table.find(pair=>!pair.defense);
+
+    return pair
+      ? beats(card,pair.attack)
+      : false;
+  }
+
+  return false;
+}
+
+function render(){
+  $("cpuHand").innerHTML=
+    cpu.map(()=>cardHTML(null,true)).join("");
+
+  $("playerHand").innerHTML=
+    player.map(card=>{
+      return cardHTML(
+        card,
+        false,
+        canPlayerPlay(card)
+          ?"playable"
+          :"disabled"
+      );
+    }).join("");
+
+  $("table").innerHTML=
+    table.map(pair=>{
+      return `
+        <div class="pair">
+          ${cardHTML(pair.attack)}
+
+          ${
+            pair.defense
+              ?cardHTML(pair.defense,false,"defense")
+              :""
+          }
+        </div>
+      `;
+    }).join("");
+
+  $("deckVisual").innerHTML=
+    deck.length
+      ?cardHTML(null,true)
+      :"";
+
+  $("deckCount").textContent=
+    deck.length
+      ?`В колоде: ${deck.length}`
+      :"";
+
+  $("trumpSymbol").textContent=trump || "";
+
+  $("trumpSymbol").style.color=
+    isRed(trump)
+      ?"#e34a58"
+      :"white";
+
+  renderAction();
+  renderStatus();
+}
+
+function renderStatus(){
+  let text="";
+
+  if(gameOver){
+    text="Игра окончена";
+  }
+  else if(defenderTaking){
+    text=
+      defender==="player"
+        ?"Ты забираешь карты"
+        :"Компьютер забирает";
+  }
+  else if(attacker==="player"){
+    text=
+      table.length
+        ?"Можно подкинуть"
+        :"Твой ход";
+  }
+  else{
+    text=
+      table.some(pair=>!pair.defense)
+        ?"Отбейся"
+        :"Ход компьютера";
+  }
+
+  $("status").textContent=
+    text+" · Козырь "+trump;
+}
+
+function renderAction(){
+  const button=$("actionButton");
+
+  button.className="hidden";
+  button.onclick=null;
+
+  if(gameOver) return;
+
+  if(
+    defender==="player" &&
+    !defenderTaking &&
+    table.some(pair=>!pair.defense)
+  ){
+    button.textContent="Забрать";
+    button.className="danger";
+    button.onclick=playerTake;
+    return;
+  }
+
+  if(
+    attacker==="player" &&
+    defenderTaking
+  ){
+    button.textContent="Закончить";
+    button.className="";
+    button.onclick=finishTake;
+    return;
+  }
+
+  if(
+    attacker==="player" &&
+    table.length &&
+    table.every(pair=>pair.defense)
+  ){
+    button.textContent="Бито";
+    button.className="";
+    button.onclick=successfulDefense;
+  }
+}
+
+function drawToSix(hand){
+  while(
+    hand.length<6 &&
+    deck.length
+  ){
+    hand.push(deck.shift());
+  }
+}
+
+function refill(callback){
+  const first=
+    attacker==="player"
+      ?player
+      :cpu;
+
+  const second=
+    attacker==="player"
+      ?cpu
+      :player;
+
+  drawToSix(first);
+  drawToSix(second);
+
+  render();
+
+  setTimeout(()=>{
+    checkGameEnd();
+
+    if(callback){
+      callback();
+    }
+  },150);
+}
+
+function lowestTrump(hand){
+  return hand
+    .filter(card=>card.suit===trump)
+    .sort((a,b)=>value(a)-value(b))[0];
+}
+
+function startGame(){
+  deck=shuffle(createDeck());
+
+  const trumpCard=deck[deck.length-1];
+  trump=trumpCard.suit;
+
+  player=[];
+  cpu=[];
+  table=[];
+
+  defenderTaking=false;
+  gameOver=false;
+
+  for(let i=0;i<6;i++){
+    player.push(deck.shift());
+    cpu.push(deck.shift());
+  }
+
+  const playerTrump=lowestTrump(player);
+  const cpuTrump=lowestTrump(cpu);
+
+  if(
+    playerTrump &&
+    cpuTrump
+  ){
+    attacker=
+      value(playerTrump)<=value(cpuTrump)
+        ?"player"
+        :"cpu";
+  }
+  else if(playerTrump){
+    attacker="player";
+  }
+  else if(cpuTrump){
+    attacker="cpu";
+  }
+  else{
+    attacker=
+      Math.random()<0.5
+        ?"player"
+        :"cpu";
+  }
+
+  defender=
+    attacker==="player"
+      ?"cpu"
+      :"player";
+
+  defenderStartCards=
+    defender==="player"
+      ?player.length
+      :cpu.length;
+
+  $("startScreen").classList.add("hidden");
+
+  render();
+
+  if(attacker==="cpu"){
+    setTimeout(cpuAttack,500);
+  }
+}
+
+function playerCardClick(id){
+  const card=
+    player.find(card=>card.id===id);
+
+  if(
+    !card ||
+    !canPlayerPlay(card)
+  ){
+    return;
+  }
+
+  if(attacker==="player"){
+    table.push({
+      attack:removeCard(player,id),
+      defense:null
+    });
+
+    render();
+
+    if(!defenderTaking){
+      setTimeout(cpuDefend,400);
+    }
+
+    return;
+  }
+
+  if(defender==="player"){
+    const pair=
+      table.find(pair=>!pair.defense);
+
+    if(
+      !pair ||
+      !beats(card,pair.attack)
+    ){
+      return;
+    }
+
+    pair.defense=
+      removeCard(player,id);
+
+    render();
+
+    setTimeout(cpuContinueAttack,400);
+  }
+}
+
+function cheapest(cards){
+  return [...cards].sort((a,b)=>{
+    const aTrump=a.suit===trump;
+    const bTrump=b.suit===trump;
+
+    if(aTrump!==bTrump){
+      return aTrump?1:-1;
+    }
+
+    return value(a)-value(b);
+  })[0];
+}
+
+function cpuDefend(){
+  if(
+    defender!=="cpu" ||
+    defenderTaking
+  ){
+    return;
+  }
+
+  const pair=
+    table.find(pair=>!pair.defense);
+
+  if(!pair) return;
+
+  const possible=
+    cpu.filter(card=>
+      beats(card,pair.attack)
+    );
+
+  if(!possible.length){
+    defenderTaking=true;
+    render();
+    return;
+  }
+
+  const defense=
+    cheapest(possible);
+
+  pair.defense=
+    removeCard(cpu,defense.id);
+
+  render();
+}
+
+function cpuAttack(){
+  if(
+    attacker!=="cpu" ||
+    gameOver
+  ){
+    return;
+  }
+
+  const possible=
+    cpu.filter(canAttack);
+
+  if(!possible.length){
+    if(table.length){
+      successfulDefense();
+    }
+
+    return;
+  }
+
+  const attack=
+    cheapest(possible);
+
+  table.push({
+    attack:removeCard(cpu,attack.id),
+    defense:null
+  });
+
+  render();
+}
+
+function cpuContinueAttack(){
+  if(
+    attacker!=="cpu" ||
+    gameOver
+  ){
+    return;
+  }
+
+  if(defenderTaking){
+    const possible=
+      cpu.filter(canAttack);
+
+    if(possible.length){
+      const attack=
+        cheapest(possible);
+
+      table.push({
+        attack:removeCard(cpu,attack.id),
+        defense:null
+      });
+
+      render();
+
+      setTimeout(
+        cpuContinueAttack,
+        300
+      );
+    }
+    else{
+      finishTake();
+    }
+
+    return;
+  }
+
+  const possible=
+    cpu.filter(canAttack);
+
+  if(
+    possible.length &&
+    table.length<Math.min(3,maxAttacks())
+  ){
+    const attack=
+      cheapest(possible);
+
+    table.push({
+      attack:removeCard(cpu,attack.id),
+      defense:null
+    });
+
+    render();
+  }
+  else{
+    successfulDefense();
+  }
+}
+
+function playerTake(){
+  if(defender!=="player"){
+    return;
+  }
+
+  defenderTaking=true;
+
+  render();
+
+  setTimeout(
+    cpuContinueAttack,
+    350
+  );
+}
+
+function collectTable(hand){
+  for(const pair of table){
+    hand.push(pair.attack);
+
+    if(pair.defense){
+      hand.push(pair.defense);
+    }
+  }
+
+  table=[];
+}
+
+function finishTake(){
+  const hand=
+    defender==="player"
+      ?player
+      :cpu;
+
+  collectTable(hand);
+
+  defenderTaking=false;
+
+  refill(()=>{
+    defenderStartCards=
+      defender==="player"
+        ?player.length
+        :cpu.length;
+
+    render();
+
+    if(
+      !gameOver &&
+      attacker==="cpu"
+    ){
+      setTimeout(cpuAttack,400);
+    }
+  });
+}
+
+function successfulDefense(){
+  if(!table.length){
+    return;
+  }
+
+  table=[];
+
+  [attacker,defender]=
+    [defender,attacker];
+
+  defenderTaking=false;
+
+  refill(()=>{
+    defenderStartCards=
+      defender==="player"
+        ?player.length
+        :cpu.length;
+
+    render();
+
+    if(
+      !gameOver &&
+      attacker==="cpu"
+    ){
+      setTimeout(cpuAttack,400);
+    }
+  });
+}
+
+function checkGameEnd(){
+  if(deck.length){
+    return;
+  }
+
+  if(
+    player.length===0 ||
+    cpu.length===0
+  ){
+    gameOver=true;
+
+    render();
+
+    setTimeout(()=>{
+      if(
+        player.length===0 &&
+        cpu.length===0
+      ){
+        alert("Ничья");
+      }
+      else if(player.length===0){
+        alert("Ты выиграл!");
+      }
+      else{
+        alert("Ты дурак!");
+      }
+
+      $("startScreen")
+        .classList
+        .remove("hidden");
+
+    },200);
+  }
+}
+
+$("playerHand")
+  .addEventListener(
+    "click",
+    event=>{
+      const card=
+        event.target.closest(
+          ".card[data-id]"
+        );
+
+      if(card){
+        playerCardClick(
+          card.dataset.id
+        );
+      }
+    }
+  );
+
+$("startButton").onclick=startGame;
+
+render();
+</script>
+
+</body>
+</html>
