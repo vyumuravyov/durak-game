@@ -6,9 +6,12 @@
 <title>Дурак</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
-html,body{
+html,
+body{
   margin:0;
   width:100%;
   height:100%;
@@ -19,6 +22,10 @@ body{
   font-family:Inter,Arial,sans-serif;
   background:#06150f;
   color:#fff;
+}
+
+button{
+  font:inherit;
 }
 
 .game{
@@ -125,7 +132,7 @@ body{
 }
 
 
-/* CARDS */
+/* CARD */
 
 .card{
   width:84px;
@@ -133,11 +140,11 @@ body{
 
   position:relative;
 
-  flex:0 0 auto;
-
   display:flex;
   align-items:center;
   justify-content:center;
+
+  flex:0 0 auto;
 
   border-radius:11px;
 
@@ -160,7 +167,7 @@ body{
 
   user-select:none;
 
-  transform-origin:center bottom;
+  transform-origin:center center;
 }
 
 .card.red{
@@ -181,7 +188,6 @@ body{
 
 .corner span{
   display:block;
-
   font-size:16px;
 }
 
@@ -216,52 +222,38 @@ body{
 
   left:50%;
 
-  display:flex;
-  justify-content:center;
-
   transform:translateX(-50%);
+
+  height:160px;
 
   z-index:30;
 }
 
 .cpu-hand{
-  top:66px;
-
-  align-items:flex-start;
+  top:64px;
 }
 
 .player-hand{
-  bottom:-10px;
-
-  min-height:170px;
-
-  padding-top:28px;
-
-  align-items:flex-end;
+  bottom:-4px;
 }
 
 .hand .card{
-  margin-left:-31px;
-}
+  position:absolute;
 
-.hand .card:first-child{
-  margin-left:0;
-}
+  left:50%;
+  top:0;
 
-
-/* FAN */
-
-.player-hand .card,
-.cpu-hand .card{
-  transform:
-    rotate(var(--rot,0deg))
-    translateY(var(--drop,0px));
+  will-change:transform;
 
   transition:
-    transform .32s cubic-bezier(.22,.8,.25,1),
-    box-shadow .22s ease,
+    transform .52s cubic-bezier(.22,.78,.22,1),
     opacity .22s ease,
-    filter .22s ease;
+    filter .22s ease,
+    box-shadow .2s ease;
+}
+
+.player-hand .card{
+  top:22px;
 }
 
 .player-hand .card.playable{
@@ -269,30 +261,18 @@ body{
 }
 
 .player-hand .card.playable:hover{
-  z-index:100;
-
-  transform:
-    rotate(var(--rot,0deg))
-    translateY(calc(var(--drop,0px) - 17px))
-    scale(1.035);
+  z-index:100 !important;
 
   box-shadow:
     0 18px 34px rgba(0,0,0,.52);
 }
 
 .player-hand .card.disabled{
-  opacity:.68;
+  opacity:.7;
 
   filter:
-    brightness(.86)
-    saturate(.9);
-}
-
-
-/* TRUMP GROUP */
-
-.player-hand .card.first-trump{
-  margin-left:4px;
+    brightness(.88)
+    saturate(.92);
 }
 
 
@@ -306,17 +286,20 @@ body{
 
   transform:translate(-50%,-50%);
 
-  width:min(770px,68vw);
-  min-height:320px;
+  width:min(760px,66vw);
+  min-height:318px;
 
-  display:flex;
+  display:grid;
+
+  grid-template-columns:
+    repeat(3,120px);
+
+  grid-auto-rows:154px;
+
   justify-content:center;
-  align-items:center;
   align-content:center;
 
-  flex-wrap:wrap;
-
-  gap:12px 18px;
+  gap:10px 26px;
 
   z-index:15;
 }
@@ -333,8 +316,6 @@ body{
 
   left:0;
   top:5px;
-
-  margin:0;
 }
 
 .pair .card.defense{
@@ -370,11 +351,6 @@ body{
   z-index:4;
 }
 
-.deck-card .card,
-.deck-trump .card{
-  margin:0;
-}
-
 .deck-trump{
   position:absolute;
 
@@ -384,6 +360,11 @@ body{
   z-index:1;
 
   transform:rotate(90deg);
+}
+
+.deck-card .card,
+.deck-trump .card{
+  margin:0;
 }
 
 .deck-count{
@@ -397,27 +378,13 @@ body{
   color:#c4d0ca;
 }
 
-.trump-label{
-  position:absolute;
-
-  left:111px;
-  top:43px;
-
-  font-size:9px;
-  letter-spacing:1.8px;
-
-  text-transform:uppercase;
-
-  color:#aebcb5;
-}
-
 .trump-symbol{
   position:absolute;
 
-  left:114px;
-  top:59px;
+  left:112px;
+  top:50px;
 
-  font-size:32px;
+  font-size:34px;
 }
 
 
@@ -434,7 +401,7 @@ body{
 
   z-index:10;
 
-  opacity:.86;
+  opacity:.88;
 }
 
 .discard-card{
@@ -542,20 +509,20 @@ body{
 }
 
 .hidden{
-  display:none!important;
+  display:none !important;
 }
 
 
-/* FLYING CARD */
+/* FLY */
 
 .flying-card{
-  position:fixed!important;
+  position:fixed !important;
 
-  z-index:1000!important;
+  z-index:1000 !important;
 
-  margin:0!important;
+  margin:0 !important;
 
-  pointer-events:none!important;
+  pointer-events:none !important;
 
   will-change:
     transform,
@@ -685,8 +652,6 @@ body{
 }
 
 
-/* RESPONSIVE */
-
 @media(max-width:850px){
 
   .card{
@@ -705,22 +670,31 @@ body{
     font-size:13px;
   }
 
-  .hand .card{
-    margin-left:-27px;
+  .hand{
+    height:130px;
   }
 
-  .player-hand .card.first-trump{
-    margin-left:0;
+  .player-hand{
+    bottom:-2px;
+  }
+
+  .player-hand .card{
+    top:18px;
   }
 
   .table{
-    width:58vw;
+    width:56vw;
 
-    gap:8px;
+    grid-template-columns:
+      repeat(2,92px);
+
+    grid-auto-rows:120px;
+
+    gap:8px 18px;
   }
 
   .pair{
-    width:90px;
+    width:92px;
     height:120px;
   }
 
@@ -751,8 +725,10 @@ body{
     right:2%;
   }
 }
+
 </style>
 </head>
+
 
 <body>
 
@@ -798,10 +774,6 @@ body{
       id="deckCount"
     ></div>
 
-    <div class="trump-label">
-      Козырь
-    </div>
-
     <div
       class="trump-symbol"
       id="trumpSymbol"
@@ -820,9 +792,11 @@ body{
     class="discard"
     id="discard"
   >
+
     <div class="discard-label">
       Бито
     </div>
+
   </div>
 
 
@@ -927,28 +901,6 @@ const ranks=[
 ];
 
 
-let deck=[];
-let player=[];
-let cpu=[];
-let table=[];
-
-let discardCount=0;
-
-let trump=null;
-let bottomTrump=null;
-
-let attacker="player";
-let defender="cpu";
-
-let defenderTaking=false;
-let defenderStartCards=6;
-
-let gameOver=false;
-let locked=false;
-
-let audioCtx=null;
-
-
 const $=
   id=>
     document.getElementById(id);
@@ -964,6 +916,41 @@ const sleep=
         )
     );
 
+
+let deck=[];
+
+let player=[];
+
+let cpu=[];
+
+let table=[];
+
+
+let discardCount=0;
+
+let trump=null;
+
+let bottomTrump=null;
+
+
+let attacker="player";
+
+let defender="cpu";
+
+
+let defenderTaking=false;
+
+let defenderStartCards=6;
+
+
+let gameOver=false;
+
+let locked=false;
+
+let audioCtx=null;
+
+
+/* BASIC */
 
 function isRed(suit){
 
@@ -984,84 +971,6 @@ function value(card){
 
 }
 
-
-/* SOUND */
-
-function sound(kind){
-
-  try{
-
-    if(!audioCtx){
-
-      audioCtx=
-        new (
-          window.AudioContext
-          ||
-          window.webkitAudioContext
-        )();
-
-    }
-
-
-    const oscillator=
-      audioCtx.createOscillator();
-
-
-    const gain=
-      audioCtx.createGain();
-
-
-    oscillator.type=
-      "triangle";
-
-
-    oscillator.frequency.value=
-
-      kind==="take"
-
-        ?160
-
-        :kind==="beat"
-
-          ?520
-
-          :320;
-
-
-    gain.gain.setValueAtTime(
-      .018,
-      audioCtx.currentTime
-    );
-
-
-    gain.gain.exponentialRampToValueAtTime(
-      .0001,
-      audioCtx.currentTime+.075
-    );
-
-
-    oscillator
-      .connect(gain)
-      .connect(
-        audioCtx.destination
-      );
-
-
-    oscillator.start();
-
-
-    oscillator.stop(
-      audioCtx.currentTime+.08
-    );
-
-  }
-
-  catch(error){}
-
-}
-
-
-/* DECK */
 
 function createDeck(){
 
@@ -1087,7 +996,7 @@ function createDeck(){
         rank,
 
         id:
-          "card_"+id++
+          "c"+id++
 
       });
 
@@ -1163,13 +1072,88 @@ function removeCard(
 }
 
 
-/* CARD HTML */
+/* SOUND */
+
+function sound(kind){
+
+  try{
+
+    if(!audioCtx){
+
+      audioCtx=
+        new (
+          window.AudioContext
+          ||
+          window.webkitAudioContext
+        )();
+
+    }
+
+
+    const oscillator=
+      audioCtx.createOscillator();
+
+
+    const gain=
+      audioCtx.createGain();
+
+
+    oscillator.type=
+      "triangle";
+
+
+    oscillator.frequency.value=
+
+      kind==="take"
+
+        ?160
+
+        :kind==="beat"
+
+          ?500
+
+          :320;
+
+
+    gain.gain.setValueAtTime(
+      .016,
+      audioCtx.currentTime
+    );
+
+
+    gain.gain.exponentialRampToValueAtTime(
+      .0001,
+      audioCtx.currentTime+.07
+    );
+
+
+    oscillator
+      .connect(gain)
+      .connect(
+        audioCtx.destination
+      );
+
+
+    oscillator.start();
+
+
+    oscillator.stop(
+      audioCtx.currentTime+.075
+    );
+
+  }
+
+  catch(error){}
+
+}
+
+
+/* CARD */
 
 function cardHTML(
   card,
   back=false,
-  extra="",
-  style=""
+  extra=""
 ){
 
   if(back){
@@ -1183,7 +1167,7 @@ function cardHTML(
           ${extra}
         "
 
-        style="${style}"
+        data-id="${card?.id||""}"
       ></div>
 
     `;
@@ -1201,8 +1185,6 @@ function cardHTML(
       "
 
       data-id="${card.id}"
-
-      style="${style}"
     >
 
       <div class="corner">
@@ -1250,7 +1232,9 @@ function sortedPlayerHand(){
         b.suit===trump;
 
 
-      /* козыри справа */
+      /*
+        Все козыри справа.
+      */
 
       if(
         aTrump!==bTrump
@@ -1265,7 +1249,9 @@ function sortedPlayerHand(){
       }
 
 
-      /* 6, 7, 8, 9... */
+      /*
+        6,6 → 7,7 → 8,8...
+      */
 
       if(
         value(a)!==
@@ -1281,7 +1267,9 @@ function sortedPlayerHand(){
       }
 
 
-      /* одинаковые значения рядом */
+      /*
+        Одинаковое достоинство.
+      */
 
       return (
         suitOrder.indexOf(
@@ -1378,6 +1366,16 @@ function maxAttacks(){
 }
 
 
+function unresolved(){
+
+  return table.some(
+    pair=>
+      !pair.defense
+  );
+
+}
+
+
 function canAttack(card){
 
   return (
@@ -1416,19 +1414,24 @@ function canPlayerPlay(card){
   }
 
 
+  /*
+    Игрок атакует.
+  */
+
   if(
     attacker==="player"
   ){
 
+    /*
+      Пока CPU ещё
+      не отбил предыдущую,
+      следующую не кидаем.
+    */
+
     if(
       !defenderTaking
-
       &&
-
-      table.some(
-        pair=>
-          !pair.defense
-      )
+      unresolved()
     ){
 
       return false;
@@ -1442,6 +1445,10 @@ function canPlayerPlay(card){
 
   }
 
+
+  /*
+    Игрок защищается.
+  */
 
   if(
     defender==="player"
@@ -1478,67 +1485,407 @@ function canPlayerPlay(card){
 }
 
 
-/* FAN */
+/* DYNAMIC HAND */
 
-function fanStyle(
-  index,
-  total,
-  inverted=false
+/*
+  Важное изменение.
+
+  Рука больше не использует
+  фиксированный overlap.
+
+  Чем больше карт,
+  тем плотнее веер.
+*/
+
+function handLayout(
+  cards,
+  isCpu=false
 ){
 
-  if(
+  const total=
+    cards.length;
+
+
+  const cardWidth=
+
+    window.innerWidth<=850
+
+      ?66
+
+      :84;
+
+
+  const maxWidth=
+
+    Math.min(
+
+      window.innerWidth
+      *
+      (
+        isCpu
+          ?.50
+          :.86
+      ),
+
+      isCpu
+        ?500
+        :980
+
+    );
+
+
+  const naturalStep=
+    58;
+
+
+  const step=
+
     total<=1
+
+      ?0
+
+      :
+
+        Math.max(
+
+          20,
+
+          Math.min(
+
+            naturalStep,
+
+            (
+              maxWidth
+              -
+              cardWidth
+            )
+            /
+            (
+              total-1
+            )
+
+          )
+
+        );
+
+
+  const totalWidth=
+
+    cardWidth
+    +
+    (
+      total-1
+    )
+    *
+    step;
+
+
+  return cards.map(
+    (
+      card,
+      index
+    )=>{
+
+      const relative=
+
+        index
+        -
+        (
+          total-1
+        )
+        /
+        2;
+
+
+      const rotationStrength=
+
+        total>12
+
+          ?1.1
+
+          :total>8
+
+            ?1.7
+
+            :2.35;
+
+
+      const rotation=
+
+        Math.max(
+
+          -12,
+
+          Math.min(
+            12,
+            relative
+            *
+            rotationStrength
+          )
+
+        )
+
+        *
+
+        (
+          isCpu
+            ?-1
+            :1
+        );
+
+
+      const drop=
+
+        Math.abs(
+          relative
+        )
+
+        *
+
+        (
+          total>12
+
+            ?.8
+
+            :total>8
+
+              ?1.2
+
+              :1.7
+        );
+
+
+      const x=
+
+        -
+        totalWidth/2
+
+        +
+
+        index
+        *
+        step;
+
+
+      return {
+
+        card,
+
+        x,
+
+        rotation,
+
+        drop,
+
+        z:
+          index+1
+
+      };
+
+    }
+  );
+
+}
+
+
+/*
+  Не удаляем и не создаём
+  всю руку заново.
+
+  Уже существующие DOM-карты
+  просто переезжают
+  в новые координаты.
+
+  Именно поэтому
+  пересортировка плавная.
+*/
+
+function syncHand(
+  container,
+  cards,
+  isCpu=false
+){
+
+  const existing=
+
+    new Map(
+
+      [
+        ...
+        container.querySelectorAll(
+          ".card"
+        )
+      ]
+      .map(
+        element=>
+          [
+            element.dataset.id,
+            element
+          ]
+      )
+
+    );
+
+
+  const keep=
+
+    new Set(
+      cards.map(
+        card=>
+          card.id
+      )
+    );
+
+
+  for(
+    const [
+      id,
+      element
+    ]
+    of existing
   ){
 
-    return `
-      --rot:0deg;
-      --drop:0px
-    `;
+    if(
+      !keep.has(id)
+    ){
+
+      element.remove();
+
+    }
 
   }
 
 
-  const middle=
-    (total-1)/2;
+  const layout=
 
-
-  const relative=
-    index-middle;
-
-
-  /*
-    Наклон стал мягче,
-    чем в прошлой версии.
-  */
-
-  const rotation=
-
-    relative
-    *
-    2.4
-    *
-    (
-      inverted
-        ?-1
-        :1
+    handLayout(
+      cards,
+      isCpu
     );
 
 
-  const drop=
+  const firstTrump=
 
-    Math.abs(
-      relative
-    )
-    *
-    1.8;
+    isCpu
+
+      ?-1
+
+      :
+
+        cards.findIndex(
+          card=>
+            card.suit===trump
+        );
 
 
-  return `
+  layout.forEach(
+    (
+      item,
+      index
+    )=>{
 
-    --rot:${rotation}deg;
-    --drop:${drop}px
+      let element=
 
-  `;
+        existing.get(
+          item.card.id
+        );
+
+
+      if(!element){
+
+        const wrapper=
+          document.createElement(
+            "div"
+          );
+
+
+        wrapper.innerHTML=
+
+          cardHTML(
+            item.card,
+            isCpu
+          );
+
+
+        element=
+          wrapper.firstElementChild;
+
+
+        element.style.opacity=
+          "0";
+
+
+        container.appendChild(
+          element
+        );
+
+
+        requestAnimationFrame(
+          ()=>{
+
+            element.style.opacity=
+              "1";
+
+          }
+        );
+
+      }
+
+
+      if(!isCpu){
+
+        element.classList.toggle(
+          "playable",
+          canPlayerPlay(
+            item.card
+          )
+        );
+
+
+        element.classList.toggle(
+          "disabled",
+          !canPlayerPlay(
+            item.card
+          )
+        );
+
+      }
+
+
+      let x=
+        item.x;
+
+
+      /*
+        Небольшой зазор
+        перед козырями.
+      */
+
+      if(
+        !isCpu
+        &&
+        index===firstTrump
+        &&
+        firstTrump>0
+      ){
+
+        x+=18;
+
+      }
+
+
+      element.style.zIndex=
+        item.z;
+
+
+      element.style.transform=
+
+        `translateX(${x}px)
+         translateY(${item.drop}px)
+         rotate(${item.rotation}deg)`;
+
+    }
+  );
 
 }
 
@@ -1547,108 +1894,22 @@ function fanStyle(
 
 function renderCPU(){
 
-  const total=
-    cpu.length;
-
-
-  $("cpuHand")
-    .innerHTML=
-
-    cpu
-      .map(
-        (
-          card,
-          index
-        )=>
-
-          cardHTML(
-            null,
-            true,
-            "",
-            fanStyle(
-              index,
-              total,
-              true
-            )
-          )
-      )
-      .join("");
+  syncHand(
+    $("cpuHand"),
+    cpu,
+    true
+  );
 
 }
 
 
 function renderPlayer(){
 
-  const hand=
-    sortedPlayerHand();
-
-
-  const total=
-    hand.length;
-
-
-  const firstTrump=
-
-    hand.findIndex(
-      card=>
-        card.suit===trump
-    );
-
-
-  $("playerHand")
-    .innerHTML=
-
-    hand
-      .map(
-        (
-          card,
-          index
-        )=>{
-
-          let classes=
-
-            canPlayerPlay(
-              card
-            )
-
-              ?"playable"
-
-              :"disabled";
-
-
-          if(
-            index===
-              firstTrump
-
-            &&
-
-            firstTrump>0
-          ){
-
-            classes+=
-              " first-trump";
-
-          }
-
-
-          return cardHTML(
-
-            card,
-
-            false,
-
-            classes,
-
-            fanStyle(
-              index,
-              total
-            )
-
-          );
-
-        }
-      )
-      .join("");
+  syncHand(
+    $("playerHand"),
+    sortedPlayerHand(),
+    false
+  );
 
 }
 
@@ -1660,13 +1921,21 @@ function renderTable(){
 
     table
       .map(
-        pair=>`
+        (
+          pair,
+          index
+        )=>`
 
-          <div class="pair">
+          <div
+            class="pair"
+            data-pair="${index}"
+          >
 
             ${
               cardHTML(
-                pair.attack
+                pair.attack,
+                false,
+                "attack"
               )
             }
 
@@ -1705,7 +1974,9 @@ function renderDeck(){
       ?
 
         cardHTML(
-          null,
+          {
+            id:"deck"
+          },
           true
         )
 
@@ -1860,10 +2131,7 @@ function renderStatus(){
 
     text=
 
-      table.some(
-        pair=>
-          !pair.defense
-      )
+      unresolved()
 
         ?
 
@@ -1909,17 +2177,16 @@ function renderAction(){
   }
 
 
+  /*
+    Игрок защищается.
+  */
+
   if(
     defender==="player"
     &&
     !defenderTaking
-
     &&
-
-    table.some(
-      pair=>
-        !pair.defense
-    )
+    unresolved()
   ){
 
     button.textContent=
@@ -1935,6 +2202,10 @@ function renderAction(){
 
   }
 
+
+  /*
+    CPU забирает.
+  */
 
   if(
     attacker==="player"
@@ -1955,19 +2226,16 @@ function renderAction(){
   }
 
 
+  /*
+    CPU всё отбил.
+  */
+
   if(
     attacker==="player"
-
     &&
-
     table.length
-
     &&
-
-    table.every(
-      pair=>
-        pair.defense
-    )
+    !unresolved()
   ){
 
     button.textContent=
@@ -2002,11 +2270,11 @@ function render(){
 }
 
 
-/* =====================================
-   NEW SMOOTH ANIMATION ENGINE
-===================================== */
+/* ANIMATIONS */
 
-function makeGhost(element){
+function makeGhost(
+  element
+){
 
   const rect=
     element.getBoundingClientRect();
@@ -2023,24 +2291,27 @@ function makeGhost(element){
   );
 
 
-  clone.style.left=
-    rect.left+"px";
+  Object.assign(
+    clone.style,
+    {
 
+      left:
+        rect.left+"px",
 
-  clone.style.top=
-    rect.top+"px";
+      top:
+        rect.top+"px",
 
+      width:
+        rect.width+"px",
 
-  clone.style.width=
-    rect.width+"px";
+      height:
+        rect.height+"px",
 
+      transform:
+        "none"
 
-  clone.style.height=
-    rect.height+"px";
-
-
-  clone.style.transform=
-    "none";
+    }
+  );
 
 
   document.body
@@ -2060,10 +2331,6 @@ function makeGhost(element){
 }
 
 
-/*
-  Плавный полёт по дуге.
-*/
-
 async function arcFlight(
   element,
   target,
@@ -2082,15 +2349,15 @@ async function arcFlight(
 
 
   const duration=
-    options.duration ?? 620;
+    options.duration ?? 520;
 
 
   const lift=
-    options.lift ?? 90;
+    options.lift ?? 70;
 
 
   const rotate=
-    options.rotate ?? 6;
+    options.rotate ?? 5;
 
 
   const scale=
@@ -2114,53 +2381,26 @@ async function arcFlight(
     target.getBoundingClientRect();
 
 
-  const x0=
-    from.left;
-
-
-  const y0=
-    from.top;
-
-
-  const x1=
+  const dx=
 
     to.left
     +
     to.width/2
     -
-    from.width/2;
+    from.width/2
+    -
+    from.left;
 
 
-  const y1=
+  const dy=
 
     to.top
     +
     to.height/2
     -
-    from.height/2;
-
-
-  const dx=
-    x1-x0;
-
-
-  const dy=
-    y1-y0;
-
-
-  /*
-    Средняя точка
-    находится выше прямой,
-    поэтому траектория
-    ощущается дугой.
-  */
-
-  const midX=
-    dx*.52;
-
-
-  const midY=
-    dy*.46-lift;
+    from.height/2
+    -
+    from.top;
 
 
   const animation=
@@ -2170,25 +2410,23 @@ async function arcFlight(
 
         {
           transform:
-            "translate(0px,0px) rotate(0deg) scale(1)",
+            "translate(0,0) rotate(0) scale(1)",
 
-          opacity:1,
-
-          offset:0
+          opacity:1
         },
 
         {
           transform:
             `translate(
-              ${midX}px,
-              ${midY}px
+              ${dx*.52}px,
+              ${dy*.45-lift}px
             )
-            rotate(${rotate*.55}deg)
-            scale(${1+(1-scale)*.4})`,
+            rotate(${rotate*.45}deg)
+            scale(1.02)`,
 
           opacity:1,
 
-          offset:.52
+          offset:.5
         },
 
         {
@@ -2203,9 +2441,7 @@ async function arcFlight(
           opacity:
             fade
               ?.15
-              :1,
-
-          offset:1
+              :1
         }
 
       ],
@@ -2215,7 +2451,7 @@ async function arcFlight(
         duration,
 
         easing:
-          "cubic-bezier(.22,.8,.25,1)",
+          "cubic-bezier(.22,.78,.22,1)",
 
         fill:
           "forwards"
@@ -2238,77 +2474,6 @@ async function arcFlight(
 }
 
 
-/*
-  Небольшое мягкое
-  приземление.
-*/
-
-async function settleCard(selector){
-
-  const card=
-    document.querySelector(
-      selector
-    );
-
-
-  if(!card){
-
-    return;
-
-  }
-
-
-  card.animate(
-    [
-
-      {
-        transform:
-          getComputedStyle(
-            card
-          ).transform
-      },
-
-      {
-        transform:
-          `${getComputedStyle(card).transform}
-          translateY(4px)
-          scale(.985)`,
-
-        offset:.55
-      },
-
-      {
-        transform:
-          getComputedStyle(
-            card
-          ).transform
-      }
-
-    ],
-
-    {
-
-      duration:190,
-
-      easing:
-        "cubic-bezier(.2,.8,.2,1)"
-
-    }
-  );
-
-
-  await sleep(
-    130
-  );
-
-}
-
-
-/*
-  Забрать / Бито
-  каскадом.
-*/
-
 async function cascadeTableTo(
   target,
   mode="take"
@@ -2324,16 +2489,7 @@ async function cascadeTableTo(
     ];
 
 
-  if(
-    !cards.length
-  ){
-
-    return;
-
-  }
-
-
-  const flights=
+  const animations=
 
     cards.map(
       (
@@ -2352,15 +2508,12 @@ async function cascadeTableTo(
                   target,
                   {
 
-                    duration:
-                      mode==="discard"
-                        ?560
-                        :600,
+                    duration:500,
 
                     lift:
                       mode==="discard"
-                        ?55
-                        :75,
+                        ?45
+                        :65,
 
                     rotate:
 
@@ -2375,7 +2528,7 @@ async function cascadeTableTo(
                       (
                         mode==="discard"
                           ?10
-                          :7
+                          :6
                       ),
 
                     scale:
@@ -2394,7 +2547,7 @@ async function cascadeTableTo(
 
               },
 
-              index*85
+              index*70
             );
 
           }
@@ -2404,76 +2557,43 @@ async function cascadeTableTo(
 
 
   await Promise.all(
-    flights
+    animations
   );
 
 }
 
 
-async function animateCpuCardToTable(){
+/* DRAW */
 
-  const source=
+function drawToSix(hand){
 
-    $("cpuHand")
-      .querySelector(
-        ".card"
-      );
+  const before=
+    hand.length;
 
 
-  if(!source){
+  while(
+    hand.length<6
+    &&
+    deck.length
+  ){
 
-    return;
+    hand.push(
+      deck.shift()
+    );
 
   }
 
 
-  await arcFlight(
-    source,
-    $("table"),
-    {
-
-      duration:610,
-
-      lift:95,
-
-      rotate:-5,
-
-      scale:.98
-
-    }
+  return (
+    hand.length
+    -
+    before
   );
 
 }
 
 
-async function animatePlayerCardToTable(
-  element
-){
-
-  await arcFlight(
-    element,
-    $("table"),
-    {
-
-      duration:620,
-
-      lift:78,
-
-      rotate:5,
-
-      scale:.98
-
-    }
-  );
-
-}
-
-
-/*
-  Добор из колоды.
-*/
-
-async function animateDealTo(
+async function animateDraw(
   targetId,
   count
 ){
@@ -2510,35 +2630,33 @@ async function animateDealTo(
         );
 
 
-    if(!source){
+    if(source){
 
-      break;
+      arcFlight(
+        source,
+        target,
+        {
+
+          duration:480,
+
+          lift:55,
+
+          rotate:
+
+            (
+              i%2
+                ?1
+                :-1
+            )
+            *
+            4,
+
+          scale:.82
+
+        }
+      );
 
     }
-
-
-    arcFlight(
-      source,
-      target,
-      {
-
-        duration:560,
-
-        lift:70,
-
-        rotate:
-          (
-            i%2
-              ?1
-              :-1
-          )
-          *
-          4,
-
-        scale:.8
-
-      }
-    );
 
 
     sound(
@@ -2547,56 +2665,37 @@ async function animateDealTo(
 
 
     await sleep(
-      115
+      95
     );
 
   }
 
 
   await sleep(
-    280
+    240
   );
 
 }
 
 
-/* DRAW */
+/*
+  Очень важное исправление.
 
-function drawToSix(hand){
+  Добирает сначала тот,
+  кто АТАКОВАЛ в этом кону.
 
-  const before=
-    hand.length;
+  Только после добора
+  меняется атакующий.
+*/
 
-
-  while(
-    hand.length<6
-    &&
-    deck.length
-  ){
-
-    hand.push(
-      deck.shift()
-    );
-
-  }
-
-
-  return (
-    hand.length
-    -
-    before
-  );
-
-}
-
-
-async function refill(
-  callback
+async function refillInOrder(
+  firstSide,
+  secondSide
 ){
 
   const first=
 
-    attacker==="player"
+    firstSide==="player"
 
       ?
 
@@ -2609,41 +2708,15 @@ async function refill(
 
   const second=
 
-    attacker==="player"
+    secondSide==="player"
 
       ?
 
-        cpu
+        player
 
       :
 
-        player;
-
-
-  const firstId=
-
-    attacker==="player"
-
-      ?
-
-        "playerHand"
-
-      :
-
-        "cpuHand";
-
-
-  const secondId=
-
-    attacker==="player"
-
-      ?
-
-        "cpuHand"
-
-      :
-
-        "playerHand";
+        cpu;
 
 
   const firstCount=
@@ -2661,40 +2734,41 @@ async function refill(
   render();
 
 
-  locked=
-    true;
+  await animateDraw(
 
+    firstSide==="player"
 
-  renderAction();
+      ?
 
+        "playerHand"
 
-  await animateDealTo(
-    firstId,
+      :
+
+        "cpuHand",
+
     firstCount
+
   );
 
 
-  await animateDealTo(
-    secondId,
+  await animateDraw(
+
+    secondSide==="player"
+
+      ?
+
+        "playerHand"
+
+      :
+
+        "cpuHand",
+
     secondCount
+
   );
-
-
-  locked=
-    false;
 
 
   render();
-
-
-  checkGameEnd();
-
-
-  if(callback){
-
-    callback();
-
-  }
 
 }
 
@@ -2722,17 +2796,6 @@ function lowestTrump(hand){
 
 function startGame(){
 
-  if(
-    audioCtx
-    &&
-    audioCtx.resume
-  ){
-
-    audioCtx.resume();
-
-  }
-
-
   deck=
     shuffle(
       createDeck()
@@ -2740,6 +2803,7 @@ function startGame(){
 
 
   bottomTrump=
+
     deck[
       deck.length-1
     ];
@@ -2910,7 +2974,7 @@ function startGame(){
 
     setTimeout(
       cpuAttack,
-      650
+      600
     );
 
   }
@@ -2918,7 +2982,357 @@ function startGame(){
 }
 
 
-/* PLAYER */
+/* =========================
+   AI
+========================= */
+
+function rankMultiplicity(
+  hand,
+  rank
+){
+
+  return hand.filter(
+    card=>
+      card.rank===rank
+  ).length;
+
+}
+
+
+/*
+  ИИ теперь ценит пары.
+
+  Например:
+  6♣ + 6♦ выгоднее,
+  чем случайная одиночная 7.
+*/
+
+function attackScore(card){
+
+  const trumpPenalty=
+
+    card.suit===trump
+
+      ?22
+
+      :0;
+
+
+  const pairBonus=
+
+    (
+      rankMultiplicity(
+        cpu,
+        card.rank
+      )
+      -
+      1
+    )
+
+    *
+    -4;
+
+
+  const pressureBonus=
+
+    player.length<=3
+
+      ?-2
+
+      :0;
+
+
+  return (
+
+    value(card)
+    *
+    2
+
+    +
+
+    trumpPenalty
+
+    +
+
+    pairBonus
+
+    +
+
+    pressureBonus
+
+  );
+
+}
+
+
+function defenseScore(
+  card,
+  attackCard
+){
+
+  let score=
+
+    value(card)
+    *
+    2;
+
+
+  /*
+    Козырную защиту
+    считаем дорогой.
+  */
+
+  if(
+    card.suit===trump
+    &&
+    attackCard.suit!==trump
+  ){
+
+    score+=18;
+
+  }
+
+
+  /*
+    Немного бережём пары.
+  */
+
+  if(
+    rankMultiplicity(
+      cpu,
+      card.rank
+    )
+    >
+    1
+  ){
+
+    score+=2;
+
+  }
+
+
+  return score;
+
+}
+
+
+function chooseAttack(options){
+
+  return [
+    ...options
+  ].sort(
+    (a,b)=>
+      attackScore(a)
+      -
+      attackScore(b)
+  )[0];
+
+}
+
+
+function chooseDefense(
+  options,
+  attackCard
+){
+
+  return [
+    ...options
+  ].sort(
+    (a,b)=>
+
+      defenseScore(
+        a,
+        attackCard
+      )
+
+      -
+
+      defenseScore(
+        b,
+        attackCard
+      )
+  )[0];
+
+}
+
+
+function cpuShouldTake(
+  attackCard
+){
+
+  const options=
+
+    cpu.filter(
+      card=>
+        beats(
+          card,
+          attackCard
+        )
+    );
+
+
+  if(
+    !options.length
+  ){
+
+    return true;
+
+  }
+
+
+  /*
+    Когда колоды уже нет
+    и CPU почти вышел,
+    он старается отбиваться.
+  */
+
+  if(
+    deck.length===0
+    &&
+    cpu.length<=3
+  ){
+
+    return false;
+
+  }
+
+
+  const defense=
+
+    chooseDefense(
+      options,
+      attackCard
+    );
+
+
+  const costsTrump=
+
+    defense.suit===trump
+
+    &&
+
+    attackCard.suit!==trump;
+
+
+  const veryExpensive=
+
+    costsTrump
+
+    &&
+
+    value(defense)
+    >=
+    ranks.indexOf(
+      "Q"
+    );
+
+
+  return (
+
+    veryExpensive
+
+    &&
+
+    value(attackCard)
+    <=
+    ranks.indexOf(
+      "9"
+    )
+
+    &&
+
+    table.length>=2
+
+    &&
+
+    cpu.length>3
+
+  );
+
+}
+
+
+function cpuShouldContinue(){
+
+  if(
+    table.length>=
+      maxAttacks()
+  ){
+
+    return false;
+
+  }
+
+
+  const options=
+
+    cpu.filter(
+      canAttack
+    );
+
+
+  if(
+    !options.length
+  ){
+
+    return false;
+
+  }
+
+
+  /*
+    Давим сильнее,
+    если у игрока
+    мало карт.
+  */
+
+  if(
+    player.length<=2
+  ){
+
+    return true;
+
+  }
+
+
+  const nonTrump=
+
+    options.filter(
+      card=>
+        card.suit!==trump
+    );
+
+
+  if(
+    nonTrump.length
+  ){
+
+    return (
+      table.length<4
+    );
+
+  }
+
+
+  /*
+    Не раскидываем
+    козыри без причины.
+  */
+
+  return (
+
+    table.length<2
+
+    &&
+
+    deck.length===0
+
+  );
+
+}
+
+
+/* PLAYER MOVE */
 
 async function playerCardClick(
   id,
@@ -2953,24 +3367,28 @@ async function playerCardClick(
   renderAction();
 
 
+  await arcFlight(
+    element,
+    $("table"),
+    {
+
+      duration:500,
+
+      lift:65,
+
+      rotate:4
+
+    }
+  );
+
+
   sound(
     "play"
   );
 
 
   /*
-    Сначала карта
-    красиво долетает.
-  */
-
-  await animatePlayerCardToTable(
-    element
-  );
-
-
-  /*
-    Потом меняем
-    состояние игры.
+    Игрок атакует.
   */
 
   if(
@@ -2980,6 +3398,7 @@ async function playerCardClick(
     table.push({
 
       attack:
+
         removeCard(
           player,
           id
@@ -2993,18 +3412,13 @@ async function playerCardClick(
     render();
 
 
-    await settleCard(
-      "#table .pair:last-child .card:first-child"
-    );
-
-
     if(
       !defenderTaking
     ){
 
       setTimeout(
         cpuDefend,
-        260
+        240
       );
 
     }
@@ -3024,6 +3438,10 @@ async function playerCardClick(
 
   }
 
+
+  /*
+    Игрок защищается.
+  */
 
   const pair=
 
@@ -3070,11 +3488,6 @@ async function playerCardClick(
   render();
 
 
-  await settleCard(
-    "#table .pair:last-child .card.defense"
-  );
-
-
   setTimeout(
     cpuContinueAttack,
     260
@@ -3083,137 +3496,7 @@ async function playerCardClick(
 }
 
 
-/* CPU */
-
-function cheapest(cards){
-
-  return [
-    ...cards
-  ].sort(
-    (a,b)=>{
-
-      const aTrump=
-        a.suit===trump;
-
-
-      const bTrump=
-        b.suit===trump;
-
-
-      if(
-        aTrump!==bTrump
-      ){
-
-        return (
-          aTrump
-            ?1
-            :-1
-        );
-
-      }
-
-
-      return (
-        value(a)
-        -
-        value(b)
-      );
-
-    }
-  )[0];
-
-}
-
-
-function cpuShouldTake(
-  attack
-){
-
-  const possible=
-
-    cpu.filter(
-      card=>
-        beats(
-          card,
-          attack
-        )
-    );
-
-
-  if(
-    !possible.length
-  ){
-
-    return true;
-
-  }
-
-
-  const cheapestDefense=
-    cheapest(
-      possible
-    );
-
-
-  const usesTrump=
-
-    cheapestDefense.suit===
-      trump
-
-    &&
-
-    attack.suit!==
-      trump;
-
-
-  const highTrump=
-
-    usesTrump
-
-    &&
-
-    value(
-      cheapestDefense
-    )
-    >=
-    ranks.indexOf(
-      "Q"
-    );
-
-
-  if(
-    cpu.length<=3
-  ){
-
-    return false;
-
-  }
-
-
-  return (
-
-    usesTrump
-
-    &&
-
-    highTrump
-
-    &&
-
-    value(attack)
-      <=
-      ranks.indexOf(
-        "9"
-      )
-
-    &&
-
-    table.length>=2
-
-  );
-
-}
-
+/* CPU DEFENSE */
 
 async function cpuDefend(){
 
@@ -3265,7 +3548,7 @@ async function cpuDefend(){
   }
 
 
-  const possible=
+  const options=
 
     cpu.filter(
       card=>
@@ -3277,7 +3560,7 @@ async function cpuDefend(){
 
 
   if(
-    !possible.length
+    !options.length
   ){
 
     defenderTaking=
@@ -3297,12 +3580,34 @@ async function cpuDefend(){
 
 
   const defense=
-    cheapest(
-      possible
+
+    chooseDefense(
+      options,
+      pair.attack
     );
 
 
-  await animateCpuCardToTable();
+  const source=
+
+    $("cpuHand")
+      .querySelector(
+        `[data-id="${defense.id}"]`
+      );
+
+
+  await arcFlight(
+    source,
+    $("table"),
+    {
+
+      duration:500,
+
+      lift:80,
+
+      rotate:-4
+
+    }
+  );
 
 
   pair.defense=
@@ -3318,14 +3623,6 @@ async function cpuDefend(){
   );
 
 
-  render();
-
-
-  await settleCard(
-    "#table .pair:last-child .card.defense"
-  );
-
-
   locked=
     false;
 
@@ -3334,6 +3631,8 @@ async function cpuDefend(){
 
 }
 
+
+/* CPU ATTACK */
 
 async function cpuAttack(){
 
@@ -3348,7 +3647,7 @@ async function cpuAttack(){
   }
 
 
-  const possible=
+  const options=
 
     cpu.filter(
       canAttack
@@ -3356,7 +3655,7 @@ async function cpuAttack(){
 
 
   if(
-    !possible.length
+    !options.length
   ){
 
     if(
@@ -3381,17 +3680,39 @@ async function cpuAttack(){
 
 
   const attack=
-    cheapest(
-      possible
+
+    chooseAttack(
+      options
     );
 
 
-  await animateCpuCardToTable();
+  const source=
+
+    $("cpuHand")
+      .querySelector(
+        `[data-id="${attack.id}"]`
+      );
+
+
+  await arcFlight(
+    source,
+    $("table"),
+    {
+
+      duration:510,
+
+      lift:88,
+
+      rotate:-4
+
+    }
+  );
 
 
   table.push({
 
     attack:
+
       removeCard(
         cpu,
         attack.id
@@ -3407,14 +3728,6 @@ async function cpuAttack(){
   );
 
 
-  render();
-
-
-  await settleCard(
-    "#table .pair:last-child .card:first-child"
-  );
-
-
   locked=
     false;
 
@@ -3423,6 +3736,8 @@ async function cpuAttack(){
 
 }
 
+
+/* CPU CONTINUE */
 
 async function cpuContinueAttack(){
 
@@ -3437,11 +3752,15 @@ async function cpuContinueAttack(){
   }
 
 
+  /*
+    Игрок уже забирает.
+  */
+
   if(
     defenderTaking
   ){
 
-    const possible=
+    const options=
 
       cpu.filter(
         canAttack
@@ -3449,31 +3768,8 @@ async function cpuContinueAttack(){
 
 
     if(
-      possible.length
+      options.length
     ){
-
-      const nonTrump=
-
-        possible.filter(
-          card=>
-            card.suit!==trump
-        );
-
-
-      const attack=
-
-        cheapest(
-          nonTrump.length
-
-            ?
-
-              nonTrump
-
-            :
-
-              possible
-        );
-
 
       locked=
         true;
@@ -3482,12 +3778,40 @@ async function cpuContinueAttack(){
       renderAction();
 
 
-      await animateCpuCardToTable();
+      const attack=
+
+        chooseAttack(
+          options
+        );
+
+
+      const source=
+
+        $("cpuHand")
+          .querySelector(
+            `[data-id="${attack.id}"]`
+          );
+
+
+      await arcFlight(
+        source,
+        $("table"),
+        {
+
+          duration:480,
+
+          lift:70,
+
+          rotate:-4
+
+        }
+      );
 
 
       table.push({
 
         attack:
+
           removeCard(
             cpu,
             attack.id
@@ -3503,14 +3827,6 @@ async function cpuContinueAttack(){
       );
 
 
-      render();
-
-
-      await settleCard(
-        "#table .pair:last-child .card:first-child"
-      );
-
-
       locked=
         false;
 
@@ -3520,7 +3836,7 @@ async function cpuContinueAttack(){
 
       setTimeout(
         cpuContinueAttack,
-        220
+        180
       );
 
     }
@@ -3537,56 +3853,32 @@ async function cpuContinueAttack(){
   }
 
 
-  const possible=
-
-    cpu.filter(
-      canAttack
-    );
-
-
-  const nonTrump=
-
-    possible.filter(
-      card=>
-        card.suit!==trump
-    );
-
-
-  const shouldPress=
-
-    player.length<=3
-
-    ||
-
-    table.length<2;
-
+  /*
+    Решаем,
+    подкидывать ли ещё.
+  */
 
   if(
-    possible.length
-
-    &&
-
-    table.length<
-      maxAttacks()
-
-    &&
-
-    shouldPress
+    cpuShouldContinue()
   ){
 
     const attack=
 
-      cheapest(
-        nonTrump.length
+      chooseAttack(
 
-          ?
+        cpu.filter(
+          canAttack
+        )
 
-            nonTrump
-
-          :
-
-            possible
       );
+
+
+    const source=
+
+      $("cpuHand")
+        .querySelector(
+          `[data-id="${attack.id}"]`
+        );
 
 
     locked=
@@ -3596,12 +3888,25 @@ async function cpuContinueAttack(){
     renderAction();
 
 
-    await animateCpuCardToTable();
+    await arcFlight(
+      source,
+      $("table"),
+      {
+
+        duration:480,
+
+        lift:70,
+
+        rotate:-4
+
+      }
+    );
 
 
     table.push({
 
       attack:
+
         removeCard(
           cpu,
           attack.id
@@ -3614,14 +3919,6 @@ async function cpuContinueAttack(){
 
     sound(
       "play"
-    );
-
-
-    render();
-
-
-    await settleCard(
-      "#table .pair:last-child .card:first-child"
     );
 
 
@@ -3674,7 +3971,16 @@ function playerTake(){
 
 
   setTimeout(
-    cpuContinueAttack,
+    ()=>{
+
+      locked=
+        false;
+
+
+      cpuContinueAttack();
+
+    },
+
     260
   );
 
@@ -3711,31 +4017,42 @@ function collectTable(hand){
 }
 
 
+/*
+  После Забрать
+  атакующий НЕ меняется.
+*/
+
 async function finishTake(){
 
-  if(gameOver){
+  if(
+    gameOver
+    ||
+    !table.length
+  ){
 
     return;
 
   }
 
 
-  const hand=
+  locked=
+    true;
 
-    defender==="player"
 
-      ?
+  renderAction();
 
-        player
 
-      :
+  const oldAttacker=
+    attacker;
 
-        cpu;
+
+  const oldDefender=
+    defender;
 
 
   const target=
 
-    defender==="player"
+    oldDefender==="player"
 
       ?
 
@@ -3746,18 +4063,6 @@ async function finishTake(){
         $("cpuHand");
 
 
-  locked=
-    true;
-
-
-  renderAction();
-
-
-  /*
-    Карты улетают
-    по одной каскадом.
-  */
-
   await cascadeTableTo(
     target,
     "take"
@@ -3765,7 +4070,17 @@ async function finishTake(){
 
 
   collectTable(
-    hand
+
+    oldDefender==="player"
+
+      ?
+
+        player
+
+      :
+
+        cpu
+
   );
 
 
@@ -3773,48 +4088,65 @@ async function finishTake(){
     false;
 
 
-  await refill(
-    ()=>{
+  /*
+    Добор:
+    атакующий → защитник.
+  */
 
-      defenderStartCards=
-
-        (
-          defender==="player"
-
-            ?
-
-              player
-
-            :
-
-              cpu
-        )
-        .length;
-
-
-      render();
-
-
-      if(
-        !gameOver
-        &&
-        attacker==="cpu"
-      ){
-
-        setTimeout(
-          cpuAttack,
-          420
-        );
-
-      }
-
-    }
+  await refillInOrder(
+    oldAttacker,
+    oldDefender
   );
+
+
+  /*
+    Тот же защитник
+    снова защищается.
+  */
+
+  defenderStartCards=
+
+    (
+      oldDefender==="player"
+
+        ?
+
+          player
+
+        :
+
+          cpu
+    )
+    .length;
+
+
+  locked=
+    false;
+
+
+  checkGameEnd();
+
+
+  render();
+
+
+  if(
+    !gameOver
+    &&
+    attacker==="cpu"
+  ){
+
+    setTimeout(
+      cpuAttack,
+      360
+    );
+
+  }
 
 }
 
 
-/* БИТО */
+/* SUCCESSFUL DEFENSE */
 
 async function successfulDefense(){
 
@@ -3822,11 +4154,28 @@ async function successfulDefense(){
     !table.length
     ||
     gameOver
+    ||
+    unresolved()
   ){
 
     return;
 
   }
+
+
+  locked=
+    true;
+
+
+  renderAction();
+
+
+  const oldAttacker=
+    attacker;
+
+
+  const oldDefender=
+    defender;
 
 
   const discarded=
@@ -3851,18 +4200,6 @@ async function successfulDefense(){
     );
 
 
-  locked=
-    true;
-
-
-  renderAction();
-
-
-  /*
-    Мягко уводим
-    карты в Бито.
-  */
-
   await cascadeTableTo(
     $("discard"),
     "discard"
@@ -3876,67 +4213,92 @@ async function successfulDefense(){
   table=[];
 
 
-  [
-    attacker,
-    defender
-  ]=
-  [
-    defender,
-    attacker
-  ];
+  /*
+    ВАЖНО:
+    сначала добор
+    в старом порядке.
+  */
+
+  await refillInOrder(
+    oldAttacker,
+    oldDefender
+  );
+
+
+  /*
+    И только теперь
+    отбившийся становится
+    новым атакующим.
+  */
+
+  attacker=
+    oldDefender;
+
+
+  defender=
+    oldAttacker;
 
 
   defenderTaking=
     false;
 
 
-  await refill(
-    ()=>{
+  defenderStartCards=
 
-      defenderStartCards=
+    (
+      defender==="player"
 
-        (
-          defender==="player"
+        ?
 
-            ?
+          player
 
-              player
+        :
 
-            :
-
-              cpu
-        )
-        .length;
+          cpu
+    )
+    .length;
 
 
-      render();
+  locked=
+    false;
 
 
-      if(
-        !gameOver
-        &&
-        attacker==="cpu"
-      ){
+  checkGameEnd();
 
-        setTimeout(
-          cpuAttack,
-          420
-        );
 
-      }
+  render();
 
-    }
-  );
+
+  if(
+    !gameOver
+    &&
+    attacker==="cpu"
+  ){
+
+    setTimeout(
+      cpuAttack,
+      360
+    );
+
+  }
 
 }
 
 
-/* END */
+/* END GAME */
 
 function checkGameEnd(){
 
+  /*
+    Пока карты лежат
+    на столе,
+    партия не заканчивается.
+  */
+
   if(
     deck.length
+    ||
+    table.length
   ){
 
     return;
@@ -3963,7 +4325,7 @@ function checkGameEnd(){
 
     setTimeout(
       showResult,
-      250
+      220
     );
 
   }
@@ -4078,6 +4440,12 @@ $("startButton")
 $("againButton")
   .onclick=
     startGame;
+
+
+window.addEventListener(
+  "resize",
+  render
+);
 
 
 render();
