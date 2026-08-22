@@ -6,12 +6,15 @@
 <title>Дурак</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
-html,body{
-  margin:0;
+html,
+body{
   width:100%;
   height:100%;
+  margin:0;
 }
 
 body{
@@ -21,7 +24,9 @@ body{
   background:#06150f;
 }
 
-button{font:inherit}
+button{
+  font:inherit;
+}
 
 .game{
   position:relative;
@@ -86,8 +91,8 @@ button{font:inherit}
   right:24px;
 
   display:flex;
-  justify-content:space-between;
   align-items:flex-start;
+  justify-content:space-between;
 
   z-index:100;
 }
@@ -102,10 +107,10 @@ button{font:inherit}
   display:block;
   margin-top:3px;
 
+  color:#e6ca7d;
+
   font-size:9px;
   letter-spacing:4px;
-
-  color:#e6ca7d;
 }
 
 .status-wrap{
@@ -131,7 +136,7 @@ button{font:inherit}
 
 
 /* =========================
-   ACTION BANNER
+   TURN BANNER
 ========================= */
 
 .turn-banner{
@@ -140,16 +145,20 @@ button{font:inherit}
   left:50%;
   top:29%;
 
-  min-width:210px;
+  min-width:220px;
 
   padding:10px 18px;
-
-  transform:translateX(-50%);
 
   border:1px solid rgba(255,255,255,.1);
   border-radius:22px;
 
-  background:rgba(4,24,16,.86);
+  background:rgba(4,24,16,.88);
+
+  transform:
+    translateX(-50%)
+    translateY(7px);
+
+  opacity:0;
 
   text-align:center;
 
@@ -157,19 +166,17 @@ button{font:inherit}
   font-weight:800;
 
   box-shadow:
-    0 10px 30px rgba(0,0,0,.25);
+    0 10px 30px rgba(0,0,0,.26);
 
   backdrop-filter:blur(8px);
 
-  opacity:0;
+  pointer-events:none;
 
   transition:
-    opacity .22s ease,
-    transform .22s ease;
+    opacity .24s ease,
+    transform .24s ease;
 
-  z-index:120;
-
-  pointer-events:none;
+  z-index:130;
 }
 
 .turn-banner.show{
@@ -177,10 +184,10 @@ button{font:inherit}
 
   transform:
     translateX(-50%)
-    translateY(-3px);
+    translateY(0);
 }
 
-.turn-banner .name{
+.turn-banner .actor{
   color:#e8c975;
 }
 
@@ -192,105 +199,12 @@ button{font:inherit}
 .opponent{
   position:absolute;
 
-  min-width:150px;
+  min-width:155px;
 
   text-align:center;
 
   z-index:40;
 }
-
-.opponent-name{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-
-  margin-bottom:7px;
-  padding:7px 11px;
-
-  border:1px solid transparent;
-  border-radius:18px;
-
-  background:rgba(3,18,12,.66);
-
-  font-size:11px;
-
-  transition:
-    transform .25s ease,
-    background .25s ease,
-    box-shadow .25s ease,
-    border-color .25s ease;
-}
-
-.opponent-name.defender{
-  border-color:#e8c975;
-
-  box-shadow:
-    0 0 0 1px rgba(232,201,117,.2);
-}
-
-.opponent-name.attacker{
-  color:#1d261f;
-
-  background:#e8c975;
-}
-
-.opponent-name.acting{
-  border-color:#fff;
-
-  transform:scale(1.08);
-
-  box-shadow:
-    0 0 0 4px rgba(255,255,255,.08),
-    0 8px 25px rgba(0,0,0,.3);
-
-  animation:
-    actorPulse 1s ease-in-out infinite;
-}
-
-@keyframes actorPulse{
-  0%,100%{
-    transform:scale(1.05);
-  }
-
-  50%{
-    transform:scale(1.1);
-  }
-}
-
-.opponent-count{
-  opacity:.7;
-  font-size:10px;
-}
-
-.bot-hand{
-  position:relative;
-
-  width:180px;
-  height:84px;
-
-  margin:auto;
-}
-
-.bot-hand .card{
-  position:absolute;
-
-  left:50%;
-  top:0;
-
-  width:58px;
-  height:81px;
-
-  transform:
-    translateX(calc(-50% + var(--x)))
-    rotate(var(--r));
-
-  transition:
-    transform .45s cubic-bezier(.22,.78,.22,1),
-    opacity .25s ease;
-}
-
-
-/* LOCATIONS */
 
 .opponent.top{
   left:50%;
@@ -313,16 +227,98 @@ button{font:inherit}
   transform:translateY(-50%);
 }
 
+.opponent-name{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+
+  margin-bottom:7px;
+  padding:7px 11px;
+
+  border:1px solid transparent;
+  border-radius:18px;
+
+  background:rgba(3,18,12,.68);
+
+  font-size:11px;
+
+  transition:
+    transform .22s ease,
+    background .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease;
+}
+
+.opponent-name.attacker{
+  color:#1d261f;
+  background:#e8c975;
+}
+
+.opponent-name.defender{
+  border-color:#e8c975;
+
+  box-shadow:
+    0 0 0 2px rgba(232,201,117,.12);
+}
+
+.opponent-name.acting{
+  transform:scale(1.07);
+
+  border-color:rgba(255,255,255,.8);
+
+  box-shadow:
+    0 0 0 4px rgba(255,255,255,.07),
+    0 8px 25px rgba(0,0,0,.28);
+}
+
+.opponent-count{
+  opacity:.65;
+  font-size:10px;
+}
+
+.bot-hand{
+  position:relative;
+
+  width:180px;
+  height:84px;
+
+  margin:auto;
+}
+
+.bot-hand .card{
+  position:absolute;
+
+  left:50%;
+  top:0;
+
+  width:58px;
+  height:81px;
+
+  transform:
+    translate3d(
+      calc(-50% + var(--x)),
+      0,
+      0
+    )
+    rotate(var(--r));
+
+  will-change:transform;
+
+  transition:
+    transform .38s cubic-bezier(.22,.78,.22,1),
+    opacity .22s ease;
+}
+
 
 /* =========================
    CARD
 ========================= */
 
 .card{
+  position:relative;
+
   width:82px;
   height:116px;
-
-  position:relative;
 
   display:flex;
   align-items:center;
@@ -333,8 +329,6 @@ button{font:inherit}
   border:1px solid #cec6b9;
   border-radius:11px;
 
-  color:#171717;
-
   background:
     linear-gradient(
       145deg,
@@ -342,15 +336,19 @@ button{font:inherit}
       #eee8de
     );
 
-  box-shadow:
-    0 10px 23px rgba(0,0,0,.43);
+  color:#171717;
 
   font-size:31px;
   font-weight:700;
 
+  box-shadow:
+    0 10px 23px rgba(0,0,0,.43);
+
   user-select:none;
 
-  transform-origin:center;
+  transform-origin:center center;
+
+  backface-visibility:hidden;
 }
 
 .card.red{
@@ -421,28 +419,27 @@ button{font:inherit}
   left:50%;
   bottom:150px;
 
-  transform:translateX(-50%);
-
   padding:6px 12px;
 
   border:1px solid transparent;
   border-radius:15px;
 
-  background:rgba(3,18,12,.62);
+  background:rgba(3,18,12,.64);
+
+  transform:translateX(-50%);
 
   font-size:11px;
 
   transition:.2s ease;
 }
 
-.player-name.defender{
-  border-color:#e8c975;
-}
-
 .player-name.attacker{
   color:#1d261f;
-
   background:#e8c975;
+}
+
+.player-name.defender{
+  border-color:#e8c975;
 }
 
 .player-hand{
@@ -462,15 +459,20 @@ button{font:inherit}
   top:20px;
 
   transform:
-    translateX(var(--x))
-    translateY(var(--y))
+    translate3d(
+      var(--x),
+      var(--y),
+      0
+    )
     rotate(var(--r));
 
+  will-change:transform;
+
   transition:
-    transform .42s cubic-bezier(.22,.78,.22,1),
-    opacity .2s,
-    filter .2s,
-    box-shadow .2s;
+    transform .38s cubic-bezier(.22,.78,.22,1),
+    opacity .2s ease,
+    filter .2s ease,
+    box-shadow .2s ease;
 }
 
 .player-hand .card.playable{
@@ -481,8 +483,11 @@ button{font:inherit}
   z-index:200!important;
 
   transform:
-    translateX(var(--x))
-    translateY(calc(var(--y) - 17px))
+    translate3d(
+      var(--x),
+      calc(var(--y) - 17px),
+      0
+    )
     rotate(var(--r))
     scale(1.035);
 
@@ -534,13 +539,12 @@ button{font:inherit}
   height:145px;
 
   transform:
-    translate(
+    translate3d(
       var(--jx),
-      var(--jy)
+      var(--jy),
+      0
     )
-    rotate(
-      var(--jr)
-    );
+    rotate(var(--jr));
 }
 
 .pair .card{
@@ -686,7 +690,7 @@ button{font:inherit}
 
 
 /* =========================
-   BUTTONS
+   ACTIONS
 ========================= */
 
 .action{
@@ -719,10 +723,20 @@ button{font:inherit}
 
   box-shadow:
     0 7px 18px rgba(0,0,0,.25);
+
+  transition:
+    transform .12s ease,
+    filter .12s ease;
+}
+
+.action button:hover{
+  transform:translateY(-2px);
+
+  filter:brightness(1.05);
 }
 
 .action button.red{
-  color:white;
+  color:#fff;
 
   background:#96323d;
 }
@@ -739,18 +753,20 @@ button{font:inherit}
 .flying-card{
   position:fixed!important;
 
-  z-index:2000!important;
-
   margin:0!important;
 
   pointer-events:none!important;
 
-  will-change:
-    transform,
-    opacity;
+  z-index:3000!important;
+
+  will-change:transform;
+
+  backface-visibility:hidden;
+
+  contain:layout paint style;
 
   box-shadow:
-    0 20px 40px rgba(0,0,0,.5)!important;
+    0 18px 38px rgba(0,0,0,.48)!important;
 }
 
 
@@ -811,17 +827,16 @@ button{font:inherit}
 .setting-title{
   margin-bottom:8px;
 
+  color:#9fb0a7;
+
   font-size:11px;
   letter-spacing:1px;
-
-  color:#9fb0a7;
 
   text-transform:uppercase;
 }
 
 .choice{
   display:grid;
-
   gap:7px;
 }
 
@@ -850,11 +865,10 @@ button{font:inherit}
 }
 
 .choice button.active{
-  color:#1e271f;
-
   border-color:#e8c975;
 
   background:#e8c975;
+  color:#1e271f;
 }
 
 .stats{
@@ -902,7 +916,6 @@ button{font:inherit}
   border-radius:11px;
 
   background:#e8c975;
-
   color:#1c251f;
 
   font-weight:900;
@@ -922,9 +935,8 @@ button{font:inherit}
 
   border-radius:23px;
 
-  color:#17201b;
-
   background:#f2ede3;
+  color:#17201b;
 
   text-align:center;
 
@@ -955,8 +967,7 @@ button{font:inherit}
   border-radius:10px;
 
   background:#174b35;
-
-  color:white;
+  color:#fff;
 
   font-weight:900;
 
@@ -1042,9 +1053,9 @@ button{font:inherit}
   }
 
   .turn-banner{
-    top:30%;
+    top:29%;
 
-    min-width:180px;
+    min-width:185px;
 
     font-size:12px;
   }
@@ -1072,7 +1083,7 @@ button{font:inherit}
         class="pill memory"
         id="memory"
       >
-        Вышло 0
+        Вышло: 0
       </div>
 
       <div
@@ -1278,18 +1289,39 @@ button{font:inherit}
     <div class="stats">
 
       <div class="stat">
-        <b id="wins">0</b>
-        <span>Победы</span>
+
+        <b id="wins">
+          0
+        </b>
+
+        <span>
+          Победы
+        </span>
+
       </div>
 
       <div class="stat">
-        <b id="losses">0</b>
-        <span>Поражения</span>
+
+        <b id="losses">
+          0
+        </b>
+
+        <span>
+          Поражения
+        </span>
+
       </div>
 
       <div class="stat">
-        <b id="rate">0%</b>
-        <span>Винрейт</span>
+
+        <b id="rate">
+          0%
+        </b>
+
+        <span>
+          Винрейт
+        </span>
+
       </div>
 
     </div>
@@ -1364,9 +1396,68 @@ const ranks=[
   "A"
 ];
 
+
+const BOT_NAMES=[
+
+  "Макс",
+  "Артём",
+  "Рома",
+  "Антон",
+  "Кирилл",
+  "Дима",
+  "Илья",
+  "Никита",
+  "Денис",
+  "Миша",
+  "Андрей",
+  "Серёга",
+  "Лёха",
+  "Вадим",
+  "Олег",
+  "Саша",
+  "Женя",
+  "Глеб",
+  "Стас",
+  "Егор",
+  "Паша",
+  "Тимур",
+  "Витя",
+  "Ярик"
+
+];
+
+
+const BOT_STYLES=[
+  "careful",
+  "normal",
+  "aggressive"
+];
+
+
+const AI_SPEED={
+
+  easy:{
+    think:1700,
+    after:850
+  },
+
+  medium:{
+    think:1400,
+    after:760
+  },
+
+  hard:{
+    think:1150,
+    after:680
+  }
+
+};
+
+
 const $=
   id=>
     document.getElementById(id);
+
 
 const sleep=
   ms=>
@@ -1388,34 +1479,6 @@ let gameMode="throw";
 let opponentCount=1;
 
 let difficulty="medium";
-
-
-/*
-  Скорость ботов.
-
-  Тут специально
-  существенно медленнее,
-  чем раньше.
-*/
-
-const AI_SPEED={
-
-  easy:{
-    think:1650,
-    after:850
-  },
-
-  medium:{
-    think:1350,
-    after:750
-  },
-
-  hard:{
-    think:1100,
-    after:650
-  }
-
-};
 
 
 /* =========================================
@@ -1456,12 +1519,6 @@ let seenCards=new Set();
 
 let humanSafe=false;
 
-
-/*
-  Кто сейчас визуально
-  выполняет действие.
-*/
-
 let actingPlayer=null;
 
 let actingText="";
@@ -1476,6 +1533,7 @@ let stats={
   losses:0
 };
 
+
 try{
 
   stats={
@@ -1489,7 +1547,7 @@ try{
     )
   };
 
-}catch(e){}
+}catch(error){}
 
 
 function saveStats(){
@@ -1503,6 +1561,7 @@ function saveStats(){
     )
 
   );
+
 
   renderStats();
 
@@ -1557,87 +1616,7 @@ function renderStats(){
 
 
 /* =========================================
-   ACTION CUE
-========================================= */
-
-function setActionCue(
-  playerIndex,
-  text
-){
-
-  actingPlayer=
-    playerIndex;
-
-  actingText=
-    text;
-
-  render();
-
-}
-
-
-function clearActionCue(){
-
-  actingPlayer=
-    null;
-
-  actingText="";
-
-  render();
-
-}
-
-
-function renderActionCue(){
-
-  const banner=
-    $("turnBanner");
-
-
-  if(
-    actingPlayer===null
-    ||
-    !actingText
-  ){
-
-    banner
-      .classList
-      .remove(
-        "show"
-      );
-
-    banner.innerHTML="";
-
-    return;
-
-  }
-
-
-  const player=
-    players[
-      actingPlayer
-    ];
-
-
-  banner.innerHTML=
-
-    `<span class="name">
-      ${player.name}
-    </span>
-    ${actingText}`;
-
-
-  banner
-    .classList
-    .add(
-      "show"
-    );
-
-}
-
-
-/* =========================================
-   HELPERS
+   BASIC
 ========================================= */
 
 function isRed(suit){
@@ -1656,6 +1635,50 @@ function value(card){
   return ranks.indexOf(
     card.rank
   );
+
+}
+
+
+function shuffle(array){
+
+  const copy=[
+    ...array
+  ];
+
+
+  for(
+    let i=copy.length-1;
+    i>0;
+    i--
+  ){
+
+    const j=
+
+      Math.floor(
+        Math.random()
+        *
+        (
+          i+1
+        )
+      );
+
+
+    [
+      copy[i],
+      copy[j]
+    ]
+
+    =
+
+    [
+      copy[j],
+      copy[i]
+    ];
+
+  }
+
+
+  return copy;
 
 }
 
@@ -1694,46 +1717,6 @@ function createDeck(){
 
 
   return result;
-
-}
-
-
-function shuffle(array){
-
-  for(
-    let i=
-      array.length-1;
-    i>0;
-    i--
-  ){
-
-    const j=
-
-      Math.floor(
-        Math.random()
-        *
-        (
-          i+1
-        )
-      );
-
-
-    [
-      array[i],
-      array[j]
-    ]
-
-    =
-
-    [
-      array[j],
-      array[i]
-    ];
-
-  }
-
-
-  return array;
 
 }
 
@@ -1839,8 +1822,7 @@ function cycleFrom(start){
 
   const result=[];
 
-  let current=
-    start;
+  let current=start;
 
 
   for(
@@ -1878,6 +1860,100 @@ function cycleFrom(start){
 
 }
 
+
+/* =========================================
+   RANDOM BOTS
+========================================= */
+
+function makeBotNames(count){
+
+  return shuffle(
+    BOT_NAMES
+  )
+  .slice(
+    0,
+    count
+  );
+
+}
+
+
+function randomBotStyle(){
+
+  return BOT_STYLES[
+    Math.floor(
+      Math.random()
+      *
+      BOT_STYLES.length
+    )
+  ];
+
+}
+
+
+function createPlayers(){
+
+  players=[
+
+    {
+
+      id:"human",
+
+      name:"Ты",
+
+      human:true,
+
+      active:true,
+
+      hand:[],
+
+      style:"human"
+
+    }
+
+  ];
+
+
+  const names=
+
+    makeBotNames(
+      opponentCount
+    );
+
+
+  for(
+    let i=0;
+    i<opponentCount;
+    i++
+  ){
+
+    players.push({
+
+      id:
+        "bot_"+i,
+
+      name:
+        names[i],
+
+      human:false,
+
+      active:true,
+
+      hand:[],
+
+      style:
+        randomBotStyle()
+
+    });
+
+  }
+
+}
+
+
+/* =========================================
+   TABLE RULES
+========================================= */
 
 function tableRanks(){
 
@@ -2030,13 +2106,9 @@ function canTransfer(
 
   if(
     gameMode!=="transfer"
-
     ||
-
     playerIndex!==defender
-
     ||
-
     phase!=="defense"
   ){
 
@@ -2044,11 +2116,6 @@ function canTransfer(
 
   }
 
-
-  /*
-    Перевод только пока
-    ещё ничего не отбито.
-  */
 
   if(
     table.some(
@@ -2105,22 +2172,17 @@ function canTransfer(
   }
 
 
-  if(
+  return (
+
     players[next]
       .hand
       .length
 
-    <
+    >=
 
     table.length+1
-  ){
 
-    return false;
-
-  }
-
-
-  return true;
+  );
 
 }
 
@@ -2203,7 +2265,8 @@ function sortedHumanHand(){
 
   return [
     ...players[0].hand
-  ].sort(
+  ]
+  .sort(
     (
       a,
       b
@@ -2286,13 +2349,8 @@ function humanLayout(cards){
   const maxWidth=
 
     Math.min(
-
-      window.innerWidth
-      *
-      .88,
-
+      window.innerWidth*.88,
       1000
-
     );
 
 
@@ -2315,13 +2373,9 @@ function humanLayout(cards){
             57,
 
             (
-              maxWidth
-              -
-              cardWidth
+              maxWidth-cardWidth
             )
-
             /
-
             (
               total-1
             )
@@ -2340,7 +2394,6 @@ function humanLayout(cards){
     (
       total-1
     )
-
     *
     step;
 
@@ -2360,7 +2413,6 @@ function humanLayout(cards){
         (
           total-1
         )
-
         /
         2;
 
@@ -2413,9 +2465,7 @@ function humanLayout(cards){
 
           (
             total>12
-
               ?.55
-
               :1.4
           ),
 
@@ -2426,13 +2476,10 @@ function humanLayout(cards){
             -11,
 
             Math.min(
-
               11,
-
               relative
               *
               strength
-
             )
 
           ),
@@ -2520,6 +2567,10 @@ function canHumanPlay(card){
 
 }
 
+
+/* =========================================
+   RENDER HUMAN
+========================================= */
 
 function renderHuman(){
 
@@ -2671,7 +2722,7 @@ function renderHuman(){
 
 
 /* =========================================
-   BOTS
+   RENDER BOTS
 ========================================= */
 
 function botLocation(
@@ -2710,13 +2761,9 @@ function botLocation(
 
 
   return [
-
     "left",
-
     "top",
-
     "right"
-
   ][position];
 
 }
@@ -2749,7 +2796,7 @@ function renderOpponents(){
           );
 
 
-        const visibleCards=
+        const visible=
 
           player.hand.slice(
             0,
@@ -2759,7 +2806,7 @@ function renderOpponents(){
 
         const cards=
 
-          visibleCards.map(
+          visible.map(
             (
               card,
               cardIndex
@@ -2772,9 +2819,8 @@ function renderOpponents(){
                 -
 
                 (
-                  visibleCards.length-1
+                  visible.length-1
                 )
-
                 /
                 2;
 
@@ -2844,15 +2890,11 @@ function renderOpponents(){
             data-player-index="${playerIndex}"
           >
 
-            <div
-              class="${nameClass}"
-            >
+            <div class="${nameClass}">
 
               ${player.name}
 
-              <span
-                class="opponent-count"
-              >
+              <span class="opponent-count">
 
                 ${
                   player.active
@@ -2907,7 +2949,7 @@ function pairJitter(index){
     2,-2,4,-3,1,-4
   ];
 
-  const r=[
+  const rotation=[
     -2,1.5,-1,2,-1.7,1
   ];
 
@@ -2921,7 +2963,7 @@ function pairJitter(index){
       y[index%6],
 
     r:
-      r[index%6]
+      rotation[index%6]
 
   };
 
@@ -2940,7 +2982,9 @@ function renderTable(){
       )=>{
 
         const jitter=
-          pairJitter(index);
+          pairJitter(
+            index
+          );
 
 
         return `
@@ -2990,7 +3034,7 @@ function renderTable(){
 
 
 /* =========================================
-   DECK
+   OTHER RENDER
 ========================================= */
 
 function renderDeck(){
@@ -3073,14 +3117,10 @@ function renderDeck(){
 
       :
 
-        "white";
+        "#fff";
 
 }
 
-
-/* =========================================
-   DISCARD
-========================================= */
 
 function renderDiscard(){
 
@@ -3091,9 +3131,7 @@ function renderDiscard(){
       3,
 
       Math.ceil(
-        discardCount
-        /
-        2
+        discardCount/2
       )
 
     );
@@ -3140,10 +3178,6 @@ function renderDiscard(){
 
 }
 
-
-/* =========================================
-   STATUS
-========================================= */
 
 function renderStatus(){
 
@@ -3194,7 +3228,7 @@ function renderStatus(){
 
         :
 
-          "Ход "
+          "Ход: "
           +
           players[currentThrower]
             .name;
@@ -3291,6 +3325,50 @@ function renderButtons(){
 }
 
 
+function renderActionCue(){
+
+  const banner=
+    $("turnBanner");
+
+
+  if(
+    actingPlayer===null
+    ||
+    !actingText
+  ){
+
+    banner
+      .classList
+      .remove(
+        "show"
+      );
+
+
+    banner.innerHTML="";
+
+
+    return;
+
+  }
+
+
+  banner.innerHTML=
+
+    `<span class="actor">
+      ${players[actingPlayer].name}
+    </span>
+    ${actingText}`;
+
+
+  banner
+    .classList
+    .add(
+      "show"
+    );
+
+}
+
+
 function render(){
 
   renderHuman();
@@ -3313,7 +3391,47 @@ function render(){
 
 
 /* =========================================
-   CARD SOURCE
+   ACTION CUE
+========================================= */
+
+function setActionCue(
+  playerIndex,
+  text
+){
+
+  actingPlayer=
+    playerIndex;
+
+
+  actingText=
+    text;
+
+
+  renderOpponents();
+
+  renderActionCue();
+
+}
+
+
+function clearActionCue(){
+
+  actingPlayer=
+    null;
+
+
+  actingText="";
+
+
+  renderOpponents();
+
+  renderActionCue();
+
+}
+
+
+/* =========================================
+   CARD ELEMENT
 ========================================= */
 
 function getCardElement(
@@ -3329,7 +3447,7 @@ function getCardElement(
       .querySelector(
 
         `#playerHand
-         [data-id="${cardId}"]`
+        [data-id="${cardId}"]`
 
       );
 
@@ -3340,9 +3458,9 @@ function getCardElement(
     .querySelector(
 
       `.opponent
-       [data-player-index="${playerIndex}"]
-       .bot-hand
-       [data-id="${cardId}"]`
+      [data-player-index="${playerIndex}"]
+      .bot-hand
+      [data-id="${cardId}"]`
 
     );
 
@@ -3350,41 +3468,22 @@ function getCardElement(
 
 
 /* =========================================
-   SMOOTH FLIGHT
+   NEW GPU ANIMATION ENGINE
 ========================================= */
 
-async function fly(
-  element,
-  target,
-  rotate=5
+function createFlyingClone(
+  source
 ){
 
-  if(
-    !element
-    ||
-    !target
-  ){
+  const rect=
 
-    return;
-
-  }
-
-
-  const from=
-
-    element
-      .getBoundingClientRect();
-
-
-  const to=
-
-    target
+    source
       .getBoundingClientRect();
 
 
   const clone=
 
-    element.cloneNode(
+    source.cloneNode(
       true
     );
 
@@ -3394,30 +3493,24 @@ async function fly(
   );
 
 
-  Object.assign(
+  clone.style.left=
+    rect.left+"px";
 
-    clone.style,
 
-    {
+  clone.style.top=
+    rect.top+"px";
 
-      left:
-        from.left+"px",
 
-      top:
-        from.top+"px",
+  clone.style.width=
+    rect.width+"px";
 
-      width:
-        from.width+"px",
 
-      height:
-        from.height+"px",
+  clone.style.height=
+    rect.height+"px";
 
-      transform:
-        "none"
 
-    }
-
-  );
+  clone.style.transform=
+    "translate3d(0,0,0)";
 
 
   document.body
@@ -3426,26 +3519,131 @@ async function fly(
     );
 
 
+  return{
+
+    clone,
+
+    rect
+
+  };
+
+}
+
+
+async function animateCardFlight(
+  source,
+  target,
+  options={}
+){
+
+  if(
+    !source
+    ||
+    !target
+  ){
+
+    return;
+
+  }
+
+
+  const duration=
+    options.duration
+    ??
+    620;
+
+
+  const rotation=
+    options.rotation
+    ??
+    5;
+
+
+  const arc=
+    options.arc
+    ??
+    70;
+
+
+  const targetScale=
+    options.scale
+    ??
+    1;
+
+
+  const {
+
+    clone,
+
+    rect:from
+
+  }=
+    createFlyingClone(
+      source
+    );
+
+
+  /*
+    Оригинальную карту
+    прячем на время полёта,
+    чтобы не было дубля.
+  */
+
+  source.style.visibility=
+    "hidden";
+
+
+  const to=
+
+    target
+      .getBoundingClientRect();
+
+
   const dx=
 
     to.left
+
     +
+
     to.width/2
+
     -
+
     from.width/2
+
     -
+
     from.left;
 
 
   const dy=
 
     to.top
+
     +
+
     to.height/2
+
     -
+
     from.height/2
+
     -
+
     from.top;
+
+
+  const midX=
+    dx*.52;
+
+
+  const midY=
+
+    dy*.46
+
+    -
+
+    arc;
 
 
   const animation=
@@ -3457,9 +3655,7 @@ async function fly(
         {
 
           transform:
-            "translate(0,0) rotate(0deg) scale(1)",
-
-          opacity:1,
+            "translate3d(0,0,0) rotate(0deg) scale(1)",
 
           offset:0
 
@@ -3468,49 +3664,58 @@ async function fly(
         {
 
           transform:
-
-            `translate(
-              ${dx*.20}px,
-              ${dy*.13-20}px
+            `translate3d(
+              ${dx*.07}px,
+              -10px,
+              0
             )
-            rotate(${rotate*.15}deg)
-            scale(1.04)`,
+            rotate(${rotation*.08}deg)
+            scale(1.025)`,
 
-          opacity:1,
-
-          offset:.20
+          offset:.13
 
         },
 
         {
 
           transform:
-
-            `translate(
-              ${dx*.55}px,
-              ${dy*.43-80}px
+            `translate3d(
+              ${midX}px,
+              ${midY}px,
+              0
             )
-            rotate(${rotate*.55}deg)
-            scale(1.05)`,
+            rotate(${rotation*.55}deg)
+            scale(1.035)`,
 
-          opacity:1,
-
-          offset:.56
+          offset:.55
 
         },
 
         {
 
           transform:
-
-            `translate(
+            `translate3d(
               ${dx}px,
-              ${dy}px
+              ${dy-4}px,
+              0
             )
-            rotate(${rotate}deg)
-            scale(1)`,
+            rotate(${rotation}deg)
+            scale(${targetScale})`,
 
-          opacity:1,
+          offset:.92
+
+        },
+
+        {
+
+          transform:
+            `translate3d(
+              ${dx}px,
+              ${dy}px,
+              0
+            )
+            rotate(${rotation}deg)
+            scale(${targetScale})`,
 
           offset:1
 
@@ -3520,10 +3725,10 @@ async function fly(
 
       {
 
-        duration:720,
+        duration,
 
         easing:
-          "cubic-bezier(.22,.74,.22,1)",
+          "cubic-bezier(.21,.72,.24,1)",
 
         fill:
           "forwards"
@@ -3544,11 +3749,109 @@ async function fly(
 
   clone.remove();
 
+
+  source.style.visibility=
+    "";
+
 }
 
 
 /* =========================================
-   AI
+   TABLE COLLECTION ANIMATION
+========================================= */
+
+async function animateTableToTarget(
+  target
+){
+
+  const cards=
+
+    [
+      ...
+      document.querySelectorAll(
+        "#table .card"
+      )
+    ];
+
+
+  if(
+    !cards.length
+  ){
+
+    return;
+
+  }
+
+
+  const jobs=[];
+
+
+  cards.forEach(
+    (
+      card,
+      index
+    )=>{
+
+      jobs.push(
+
+        new Promise(
+          resolve=>{
+
+            setTimeout(
+              async()=>{
+
+                await animateCardFlight(
+
+                  card,
+
+                  target,
+
+                  {
+
+                    duration:480,
+
+                    arc:42,
+
+                    rotation:
+                      (
+                        index%2
+                          ?7
+                          :-7
+                      ),
+
+                    scale:.72
+
+                  }
+
+                );
+
+
+                resolve();
+
+              },
+
+              index*55
+
+            );
+
+          }
+        )
+
+      );
+
+    }
+  );
+
+
+  await Promise.all(
+    jobs
+  );
+
+}
+
+
+/* =========================================
+   AI LOGIC
 ========================================= */
 
 function cheapest(
@@ -3558,7 +3861,8 @@ function cheapest(
 
   return [
     ...cards
-  ].sort(
+  ]
+  .sort(
     (
       a,
       b
@@ -3608,6 +3912,10 @@ function chooseAIAttack(
   cards
 ){
 
+  const bot=
+    players[playerIndex];
+
+
   if(
     difficulty==="easy"
   ){
@@ -3620,15 +3928,10 @@ function chooseAIAttack(
   }
 
 
-  const hand=
-
-    players[playerIndex]
-      .hand;
-
-
   return [
     ...cards
-  ].sort(
+  ]
+  .sort(
     (
       a,
       b
@@ -3636,7 +3939,7 @@ function chooseAIAttack(
 
       function score(card){
 
-        let score=
+        let result=
           value(card)*2;
 
 
@@ -3644,24 +3947,20 @@ function chooseAIAttack(
           card.suit===trump
         ){
 
-          score+=
+          result+=
 
             difficulty==="hard"
 
-              ?
+              ?25
 
-                25
-
-              :
-
-                18;
+              :18;
 
         }
 
 
         const same=
 
-          hand.filter(
+          bot.hand.filter(
             item=>
               item.rank===
               card.rank
@@ -3669,7 +3968,7 @@ function chooseAIAttack(
           .length;
 
 
-        score-=
+        result-=
 
           (
             same-1
@@ -3678,7 +3977,27 @@ function chooseAIAttack(
           4;
 
 
-        return score;
+        if(
+          bot.style==="aggressive"
+        ){
+
+          result-=2;
+
+        }
+
+
+        if(
+          bot.style==="careful"
+          &&
+          card.suit===trump
+        ){
+
+          result+=5;
+
+        }
+
+
+        return result;
 
       }
 
@@ -3747,6 +4066,10 @@ function aiWantsTransfer(
   card
 ){
 
+  const bot=
+    players[playerIndex];
+
+
   if(
     gameMode!=="transfer"
     ||
@@ -3771,7 +4094,7 @@ function aiWantsTransfer(
 
 
   if(
-    difficulty==="hard"
+    bot.style==="aggressive"
   ){
 
     return true;
@@ -3779,7 +4102,20 @@ function aiWantsTransfer(
   }
 
 
+  if(
+    bot.style==="careful"
+    &&
+    card.suit===trump
+  ){
+
+    return false;
+
+  }
+
+
   return (
+    difficulty==="hard"
+    ||
     card.suit!==trump
   );
 
@@ -3787,63 +4123,14 @@ function aiWantsTransfer(
 
 
 /* =========================================
-   PLAYERS
+   ROUND
 ========================================= */
-
-function createPlayers(){
-
-  players=[
-
-    {
-
-      id:"human",
-
-      name:"Ты",
-
-      human:true,
-
-      active:true,
-
-      hand:[]
-
-    }
-
-  ];
-
-
-  for(
-    let i=1;
-    i<=opponentCount;
-    i++
-  ){
-
-    players.push({
-
-      id:
-        "cpu"+i,
-
-      name:
-        "CPU "+i,
-
-      human:false,
-
-      active:true,
-
-      hand:[]
-
-    });
-
-  }
-
-}
-
 
 function findLowestTrumpPlayer(){
 
   let winner=null;
 
-  let best=
-    999;
+  let best=999;
 
 
   players.forEach(
@@ -3885,6 +4172,7 @@ function findLowestTrumpPlayer(){
         best=
           low;
 
+
         winner=
           index;
 
@@ -3911,10 +4199,6 @@ function findLowestTrumpPlayer(){
 }
 
 
-/* =========================================
-   ROUND
-========================================= */
-
 function startRound(
   newAttacker
 ){
@@ -3924,6 +4208,7 @@ function startRound(
 
 
   defender=
+
     nextActive(
       attacker
     );
@@ -3959,7 +4244,11 @@ function startRound(
     false;
 
 
-  clearActionCue();
+  actingPlayer=
+    null;
+
+
+  actingText="";
 
 
   render();
@@ -3971,7 +4260,7 @@ function startRound(
 
 
 /* =========================================
-   THROWER ORDER
+   THROWERS
 ========================================= */
 
 function eligibleThrowers(){
@@ -4001,7 +4290,7 @@ function nextThrowerAfter(
     eligibleThrowers();
 
 
-  const position=
+  const index=
 
     list.indexOf(
       current
@@ -4009,7 +4298,7 @@ function nextThrowerAfter(
 
 
   if(
-    position<0
+    index<0
   ){
 
     return list[0];
@@ -4019,7 +4308,7 @@ function nextThrowerAfter(
 
   return list[
     (
-      position+1
+      index+1
     )
     %
     list.length
@@ -4033,7 +4322,9 @@ function allThrowersPassed(){
   return eligibleThrowers()
     .every(
       index=>
-        passed.has(index)
+        passed.has(
+          index
+        )
     );
 
 }
@@ -4044,16 +4335,7 @@ function moveToNextThrower(){
   if(
     table.length>=
       maxAttacks()
-  ){
-
-    finishSuccessfulDefense();
-
-    return;
-
-  }
-
-
-  if(
+    ||
     allThrowersPassed()
   ){
 
@@ -4100,9 +4382,6 @@ function moveToNextThrower(){
     "attack";
 
 
-  clearActionCue();
-
-
   render();
 
 
@@ -4135,7 +4414,11 @@ async function playAttackCard(
   }
 
 
-  locked=true;
+  locked=
+    true;
+
+
+  renderButtons();
 
 
   if(
@@ -4150,17 +4433,17 @@ async function playAttackCard(
 
         ?
 
-          "подкидывает карту"
+          " подкидывает"
 
         :
 
-          "ходит"
+          " ходит"
 
     );
 
 
     await sleep(
-      380
+      300
     );
 
   }
@@ -4174,17 +4457,35 @@ async function playAttackCard(
     );
 
 
+  /*
+    ВАЖНО:
+    пока летит карта,
+    render() не вызывается.
+  */
+
   if(source){
 
-    await fly(
+    await animateCardFlight(
 
       source,
 
       $("table"),
 
-      playerIndex===0
-        ?4
-        :-5
+      {
+
+        duration:620,
+
+        arc:
+          playerIndex===0
+            ?58
+            :78,
+
+        rotation:
+          playerIndex===0
+            ?4
+            :-5
+
+      }
 
     );
 
@@ -4229,6 +4530,11 @@ async function playAttackCard(
     "defense";
 
 
+  /*
+    Только сейчас
+    перерисовываем интерфейс.
+  */
+
   render();
 
 
@@ -4237,9 +4543,11 @@ async function playAttackCard(
   ){
 
     await sleep(
+
       AI_SPEED[
         difficulty
       ].after
+
     );
 
 
@@ -4248,10 +4556,11 @@ async function playAttackCard(
   }
 
 
-  locked=false;
+  locked=
+    false;
 
 
-  render();
+  renderButtons();
 
 
   scheduleCurrentAction();
@@ -4324,7 +4633,11 @@ async function defendWith(
   }
 
 
-  locked=true;
+  locked=
+    true;
+
+
+  renderButtons();
 
 
   if(
@@ -4335,13 +4648,13 @@ async function defendWith(
 
       playerIndex,
 
-      "отбивается"
+      " отбивается"
 
     );
 
 
     await sleep(
-      350
+      280
     );
 
   }
@@ -4357,15 +4670,24 @@ async function defendWith(
 
   if(source){
 
-    await fly(
+    await animateCardFlight(
 
       source,
 
       $("table"),
 
-      playerIndex===0
-        ?5
-        :-5
+      {
+
+        duration:600,
+
+        arc:62,
+
+        rotation:
+          playerIndex===0
+            ?5
+            :-5
+
+      }
 
     );
 
@@ -4387,28 +4709,6 @@ async function defendWith(
   seenCards.add(
     pair.defense.id
   );
-
-
-  render();
-
-
-  if(
-    playerIndex!==0
-  ){
-
-    await sleep(
-      AI_SPEED[
-        difficulty
-      ].after
-    );
-
-
-    clearActionCue();
-
-  }
-
-
-  locked=false;
 
 
   if(
@@ -4433,6 +4733,31 @@ async function defendWith(
 
 
   render();
+
+
+  if(
+    playerIndex!==0
+  ){
+
+    await sleep(
+
+      AI_SPEED[
+        difficulty
+      ].after
+
+    );
+
+
+    clearActionCue();
+
+  }
+
+
+  locked=
+    false;
+
+
+  renderButtons();
 
 
   scheduleCurrentAction();
@@ -4461,7 +4786,11 @@ async function transferAttack(
   }
 
 
-  locked=true;
+  locked=
+    true;
+
+
+  renderButtons();
 
 
   if(
@@ -4472,13 +4801,13 @@ async function transferAttack(
 
       oldDefender,
 
-      "переводит"
+      " переводит"
 
     );
 
 
     await sleep(
-      400
+      300
     );
 
   }
@@ -4494,15 +4823,24 @@ async function transferAttack(
 
   if(source){
 
-    await fly(
+    await animateCardFlight(
 
       source,
 
       $("table"),
 
-      oldDefender===0
-        ?5
-        :-5
+      {
+
+        duration:620,
+
+        arc:70,
+
+        rotation:
+          oldDefender===0
+            ?5
+            :-5
+
+      }
 
     );
 
@@ -4569,9 +4907,11 @@ async function transferAttack(
   ){
 
     await sleep(
+
       AI_SPEED[
         difficulty
       ].after
+
     );
 
 
@@ -4580,10 +4920,11 @@ async function transferAttack(
   }
 
 
-  locked=false;
+  locked=
+    false;
 
 
-  render();
+  renderButtons();
 
 
   scheduleCurrentAction();
@@ -4592,7 +4933,7 @@ async function transferAttack(
 
 
 /* =========================================
-   TAKE
+   TAKE CARDS
 ========================================= */
 
 async function defenderTakes(){
@@ -4608,24 +4949,65 @@ async function defenderTakes(){
   }
 
 
-  locked=true;
+  locked=
+    true;
+
+
+  renderButtons();
+
+
+  const oldDefender=
+    defender;
 
 
   if(
-    defender!==0
+    oldDefender!==0
   ){
 
     setActionCue(
 
-      defender,
+      oldDefender,
 
-      "забирает карты"
+      " забирает"
 
     );
 
 
     await sleep(
-      700
+      400
+    );
+
+  }
+
+
+  const target=
+
+    oldDefender===0
+
+      ?
+
+        $("playerHand")
+
+      :
+
+        document.querySelector(
+
+          `.opponent
+          [data-player-index="${oldDefender}"]
+          .bot-hand`
+
+        );
+
+
+  /*
+    Теперь карты реально
+    улетают со стола в руку.
+  */
+
+  if(target){
+
+    await animateTableToTarget(
+      target
     );
 
   }
@@ -4636,7 +5018,7 @@ async function defenderTakes(){
     of table
   ){
 
-    players[defender]
+    players[oldDefender]
       .hand
       .push(
         pair.attack
@@ -4647,7 +5029,7 @@ async function defenderTakes(){
       pair.defense
     ){
 
-      players[defender]
+      players[oldDefender]
         .hand
         .push(
           pair.defense
@@ -4658,19 +5040,10 @@ async function defenderTakes(){
   }
 
 
-  const oldDefender=
-    defender;
-
-
   table=[];
 
 
   render();
-
-
-  await sleep(
-    450
-  );
 
 
   await refillRound(
@@ -4693,15 +5066,12 @@ async function defenderTakes(){
   clearActionCue();
 
 
-  const nextAttacker=
+  startRound(
 
     nextActive(
       oldDefender
-    );
+    )
 
-
-  startRound(
-    nextAttacker
   );
 
 }
@@ -4724,10 +5094,18 @@ async function finishSuccessfulDefense(){
   }
 
 
-  locked=true;
+  locked=
+    true;
 
 
-  discardCount+=
+  renderButtons();
+
+
+  const oldDefender=
+    defender;
+
+
+  const tableCards=
 
     table.reduce(
       (
@@ -4753,19 +5131,19 @@ async function finishSuccessfulDefense(){
     );
 
 
-  const oldDefender=
-    defender;
+  await animateTableToTarget(
+    $("discard")
+  );
+
+
+  discardCount+=
+    tableCards;
 
 
   table=[];
 
 
   render();
-
-
-  await sleep(
-    550
-  );
 
 
   await refillRound(
@@ -4786,9 +5164,8 @@ async function finishSuccessfulDefense(){
 
 
   if(
-    players[
-      oldDefender
-    ].active
+    players[oldDefender]
+      .active
   ){
 
     startRound(
@@ -4813,8 +5190,109 @@ async function finishSuccessfulDefense(){
 
 
 /* =========================================
-   REFILL
+   DRAW ANIMATION
 ========================================= */
+
+async function drawOneCard(
+  playerIndex
+){
+
+  if(
+    !deck.length
+  ){
+
+    return false;
+
+  }
+
+
+  const source=
+
+    $("deckBack")
+      .querySelector(
+        ".card"
+      )
+
+    ||
+
+    $("deckTrump")
+      .querySelector(
+        ".card"
+      );
+
+
+  const target=
+
+    playerIndex===0
+
+      ?
+
+        $("playerHand")
+
+      :
+
+        document.querySelector(
+
+          `.opponent
+          [data-player-index="${playerIndex}"]
+          .bot-hand`
+
+        );
+
+
+  const card=
+    deck[0];
+
+
+  if(
+    source
+    &&
+    target
+  ){
+
+    await animateCardFlight(
+
+      source,
+
+      target,
+
+      {
+
+        duration:420,
+
+        arc:38,
+
+        rotation:
+          playerIndex===0
+            ?3
+            :-3,
+
+        scale:.72
+
+      }
+
+    );
+
+  }
+
+
+  deck.shift();
+
+
+  players[playerIndex]
+    .hand
+    .push(
+      card
+    );
+
+
+  render();
+
+
+  return true;
+
+}
+
 
 async function refillRound(
   finalDefender
@@ -4837,12 +5315,12 @@ async function refillRound(
 
 
   for(
-    const index
+    const playerIndex
     of order
   ){
 
     if(
-      !players[index]
+      !players[playerIndex]
         .active
     ){
 
@@ -4852,7 +5330,7 @@ async function refillRound(
 
 
     while(
-      players[index]
+      players[playerIndex]
         .hand
         .length<6
 
@@ -4861,18 +5339,13 @@ async function refillRound(
       deck.length
     ){
 
-      players[index]
-        .hand
-        .push(
-          deck.shift()
-        );
-
-
-      render();
+      await drawOneCard(
+        playerIndex
+      );
 
 
       await sleep(
-        140
+        70
       );
 
     }
@@ -4881,14 +5354,14 @@ async function refillRound(
 
 
   await sleep(
-    300
+    250
   );
 
 }
 
 
 /* =========================================
-   ELIMINATION
+   FINISHED PLAYERS
 ========================================= */
 
 function removeFinishedPlayers(){
@@ -4961,7 +5434,7 @@ function checkEndGame(){
 
       "Ты вышел из игры",
 
-      "У тебя закончились карты. Ты не дурак."
+      "Карты закончились. Ты не дурак."
 
     );
 
@@ -5079,21 +5552,53 @@ async function aiAttack(
   playerIndex
 ){
 
+  if(
+    gameOver
+  ){
+
+    return;
+
+  }
+
+
   setActionCue(
 
     playerIndex,
 
-    "думает..."
+    " думает..."
 
   );
 
 
-  await sleep(
+  let thinkTime=
 
     AI_SPEED[
       difficulty
-    ].think
+    ].think;
 
+
+  if(
+    players[playerIndex]
+      .style==="careful"
+  ){
+
+    thinkTime+=150;
+
+  }
+
+
+  if(
+    players[playerIndex]
+      .style==="aggressive"
+  ){
+
+    thinkTime-=120;
+
+  }
+
+
+  await sleep(
+    thinkTime
   );
 
 
@@ -5121,31 +5626,77 @@ async function aiAttack(
       );
 
 
+  let passChance=
+    0;
+
+
+  if(
+    table.length
+  ){
+
+    if(
+      players[playerIndex]
+        .style==="careful"
+    ){
+
+      passChance=
+        .28;
+
+    }
+
+
+    if(
+      players[playerIndex]
+        .style==="normal"
+    ){
+
+      passChance=
+        .12;
+
+    }
+
+
+    if(
+      players[playerIndex]
+        .style==="aggressive"
+    ){
+
+      passChance=
+        .03;
+
+    }
+
+  }
+
+
+  if(
+    difficulty==="easy"
+  ){
+
+    passChance+=
+      .15;
+
+  }
+
+
   if(
     !options.length
-
     ||
-
-    (
-      table.length>0
-      &&
-      difficulty==="easy"
-      &&
-      Math.random()<.35
-    )
+    Math.random()<
+      passChance
   ){
 
     setActionCue(
 
       playerIndex,
 
-      "пасует"
+      " пасует"
 
     );
 
 
     await sleep(
-      700
+      650
     );
 
 
@@ -5189,11 +5740,20 @@ async function aiDefend(
   playerIndex
 ){
 
+  if(
+    gameOver
+  ){
+
+    return;
+
+  }
+
+
   setActionCue(
 
     playerIndex,
 
-    "думает, чем отбиться..."
+    " думает..."
 
   );
 
@@ -5249,7 +5809,7 @@ async function aiDefend(
       transfers.length
     ){
 
-      const card=
+      const transferCard=
 
         cheapest(
           transfers,
@@ -5260,13 +5820,13 @@ async function aiDefend(
       if(
         aiWantsTransfer(
           playerIndex,
-          card
+          transferCard
         )
       ){
 
         await transferAttack(
           playerIndex,
-          card
+          transferCard
         );
 
 
@@ -5288,37 +5848,37 @@ async function aiDefend(
 
 
   if(
-    defense
-    &&
-    difficulty==="hard"
-    &&
-    defense.suit===trump
-    &&
-    pair.attack.suit!==trump
-    &&
-    value(defense)>=7
-    &&
-    players[playerIndex]
-      .hand
-      .length>4
-    &&
-    Math.random()<.3
+    !defense
   ){
 
     await defenderTakes();
-
 
     return;
 
   }
 
 
+  const bot=
+    players[playerIndex];
+
+
   if(
-    !defense
+    difficulty==="hard"
+    &&
+    bot.style==="careful"
+    &&
+    defense.suit===trump
+    &&
+    pair.attack.suit!==trump
+    &&
+    value(defense)>=6
+    &&
+    bot.hand.length>4
+    &&
+    Math.random()<.34
   ){
 
     await defenderTakes();
-
 
     return;
 
@@ -5397,7 +5957,7 @@ function scheduleCurrentAction(){
 
 
 /* =========================================
-   HUMAN CLICK
+   HUMAN
 ========================================= */
 
 $("playerHand")
@@ -5477,10 +6037,6 @@ $("playerHand")
   );
 
 
-/* =========================================
-   BUTTONS
-========================================= */
-
 $("takeButton")
   .onclick=
     ()=>{
@@ -5529,6 +6085,12 @@ $("passButton")
 
 async function initialDeal(){
 
+  /*
+    Раздаём по одной карте.
+    Без render в середине
+    полёта каждой карты.
+  */
+
   for(
     let round=0;
     round<6;
@@ -5536,9 +6098,9 @@ async function initialDeal(){
   ){
 
     for(
-      let i=0;
-      i<players.length;
-      i++
+      let playerIndex=0;
+      playerIndex<players.length;
+      playerIndex++
     ){
 
       if(
@@ -5550,18 +6112,13 @@ async function initialDeal(){
       }
 
 
-      players[i]
-        .hand
-        .push(
-          deck.shift()
-        );
-
-
-      render();
+      await drawOneCard(
+        playerIndex
+      );
 
 
       await sleep(
-        120
+        55
       );
 
     }
@@ -5570,7 +6127,7 @@ async function initialDeal(){
 
 
   await sleep(
-    400
+    350
   );
 
 }
@@ -5691,7 +6248,7 @@ async function startGame(){
 
 
 /* =========================================
-   SETTINGS
+   SETTINGS UI
 ========================================= */
 
 function setupChoice(
@@ -5810,6 +6367,22 @@ $("againButton")
         );
 
     };
+
+
+window.addEventListener(
+  "resize",
+  ()=>{
+
+    if(
+      players.length
+    ){
+
+      render();
+
+    }
+
+  }
+);
 
 
 renderStats();
